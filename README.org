@@ -111,6 +111,9 @@
 
             /* Write "bar\n" to USART 0 */
             write_usart(0, bar_str, sizeof(bar_str));
+            
+            /* Wait 1/2 second */
+            wait(HZ / 2);
         }
     }
   #+END_SRC
