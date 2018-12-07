@@ -18,7 +18,7 @@
 
 
 * MCU
-  All that time, I've been developing YAROS on a *ATmega324PA*,
+  I've been developing YAROS on a *ATmega324PA*,
   hardware and in a simulator. It would be great to test it on
   different MCU.
 
@@ -61,7 +61,7 @@
     - [-] 2560
 
 * GNU11
-  I use *GNU11* extension for *C*. Notable usage is functioning
+  I use *GNU11* extension for *C*. Notable usage is function
   attributes and flexible array members. The latest is not compatible
   with *C++*. This was a design decision because I needed everything
   to be compiled time. Although it would be possible to accomplish the
@@ -149,6 +149,9 @@
 
             /* Write "bar\n" to USART 0 */
             write_usart(0, bar_str, sizeof(bar_str));
+            
+            /* Wait 1/2 second */
+            wait(HZ / 2);
         }
     }
   #+END_SRC
