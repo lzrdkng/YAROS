@@ -1,0 +1,32 @@
+#!/bin/bash
+
+EXEC=./bin/test
+SIMULATOR=simavr
+TERMINAL=gnome-terminal
+
+if [ $SIMULATOR == simavr ]
+then
+    OPTS="--gdb --mcu atmega324pa --freq 8000000 -v $EXEC"
+elif [ $SIMULATOR == simulavr ]
+then
+     OPTS="--gdbserver -p 1234 --device atmega164a --cpufrequency 8000000 -V --file $EXEC"
+else
+    echo "Simulator $SIMULATOR is not supported"
+    exit 1
+fi
+
+
+if [ $TERMINAL == "gnome-terminal" ]
+then
+    CMD="$TERMINAL -- $SIMULATOR $OPTS"
+elif [ $TERMINAL == "konsole" ]
+then
+    CMD="$TERMINAL --workdir $PWD --seperate -e $SIMULATOR $OPTS &"
+else
+    echo "Terminal $TERMINAL is not supported"
+    exit 1
+fi
+
+eval $CMD
+avr-gdb -x .gdbinit $EXEC
+pkill $SIMULATOR

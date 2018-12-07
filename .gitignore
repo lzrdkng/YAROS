@@ -1,0 +1,8 @@
+*.o
+*.d
+*.a
+build
+lib
+GPATH
+GRTAGS
+GTAGS

@@ -1,0 +1,138 @@
+* Yet Another Real-time OS
+  *YAROS* is a small project of mine that I did during class for
+   fun. It's my first attempt to make an OS kernel and it's not yet a
+   real-time OS, but I aim it to be.
+
+* TODO
+  - [-] Develop tests
+  - [-] Better configuration script
+  - [-] Better device driver selection
+  - [-] Memory manager
+  - [-] File System 
+  - [-] Better source code layout 
+  - [-] Real-time scheduling
+  - [-] C++ Compatible
+  - [-] Test on different MCU
+  - [-] Profiler
+
+
+
+* MCU
+  All that time, I've been developing YAROS on a *ATmega324PA*,
+  hardware and in a simulator. It would be great to test it on
+  different MCU.
+
+* GNU11
+  I use *GNU11* extension for *C*. Notable usage is functioning
+  attributes and flexible array members. The latest is not compatible
+  with *C++*. This was a design decision because I needed everything
+  to be compiled time. Although it would be possible to accomplish the
+  same thing using templates, I didn't try it yet. The best thing
+  would be to implement a memory manager to avoid using those compile
+  time constraint. The kernel itself should only be written in C, or
+  C++ written like C. Basically, the only thing I want from C++ is
+  template for better meta-programming, nothing else.
+
+* Configuration
+  I made YAROS entirely configurable at compiling time. To do so, I
+  made a little python script (*scripts/kconfigure*). It's a trivial
+  script that ask what value to assign to a config option. It then
+  generates a *kconfig.list* file. This file is then used by the same
+  script to generate *include/kconfig.h* that is imported by
+  *include/YAROS/config.h*. I wanted a better way to generate
+  configuration and control dependencies. \\
+
+* Xlist
+  I made extensive use of *X macros*, see the *.xlist* files.
+
+* Example
+  #+BEGIN_SRC C
+    #include "YAROS.h"
+
+    /* foo has priority level 0, nice value of 5 and a stack of 50 bytes */
+    struct task foo = TASK(TASK_P0, TASK_N5, 50);
+
+    /* foo has priority level 4, nice value of 9 and a stack of 75 bytess */
+    struct task bar = TASK(TASK_P4, TASK_N9, 75);
+
+    OS_TASK void
+    do_foo(void *task);
+
+    OS_TASK void
+    do_bar(void *nil);
+
+    int
+    main(int argc, char *argv[])
+    {
+        /* Initialize the Kernel */
+        kinit();
+
+        /* Foo is scheduled */
+        run_task(&foo,
+                 do_foo,
+                 &bar);
+
+        /* Bar is suspended */
+        init_task(&bar,
+                  do_bar,
+                  NULL);
+
+        krun();
+    }
+
+
+    OS_TASK void
+    do_foo(void *bar_task)
+    {
+        static const foo_str[] = {'f', 'o', 'o', '\n'};
+
+        while (1) {
+
+            /* Write "foo_str\n" to USART 0 */
+            write_usart(0, foo_str, sizeof(foo_str));
+
+            /* Resume bar */
+            resume(bar_task);
+
+            /* Wait 1 second */
+            wait(HZ);
+
+            /* Suspend bar */
+            suspend(bar_task);
+        }
+    }
+
+    OS_TASK void
+    do_bar(void *nil)
+    {
+        static const bar_str[] = {'b', 'a', 'r', '\n'};
+
+        while (1) {
+
+            /* Write "bar\n" to USART 0 */
+            write_usart(0, bar_str, sizeof(bar_str));
+        }
+    }
+  #+END_SRC
+** Output
+   #+BEGIN_SRC bash
+     Loaded 6770 .text at address 0x0
+     Loaded 244 .data
+     avr_gdb_init listening on port 1234
+     gdb_network_handler connection opened
+     gdb_network_handler recv: Connection reset by peer
+     gdb_network_handler connection closed
+     gdb_network_handler connection opened
+     foo.
+     bar.
+     bar.
+     foo.
+     bar.
+     bar.
+     foo.
+     bar.
+     bar.
+     foo.
+     bar.
+     GDB hit control-c
+   #+END_SRC

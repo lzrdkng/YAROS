@@ -1,0 +1,111 @@
+#!/bin/python
+
+import os
+
+keys = ["WITH_DEBUG", "JIFFY64", "SOFT_INT", "SYS_CLK_ASM"]
+kv = {"HZ":None, "F_CPU":None}
+
+
+def welcome_prompt():
+    print("Welcome to the Kernel configuration script!")
+
+def generate_keys():
+    generated_keys = []
+
+    for key in keys:
+        if str(input("{}: ".format(key))):
+            generated_keys.append(key)
+        else:
+            generated_keys.append('!' + key)
+
+    return generated_keys
+
+
+def generate_kv():
+
+    generated_kv = {}
+
+    for key in kv:
+        value = str(input("{}=".format(key)))
+        if value:
+            generated_kv[key] = value
+        else:
+            generated_kv['!' + key] = value
+
+    return generated_kv
+
+
+def write_config_list(generated_keys,
+                      generated_kv):
+
+    with open("sripts/kconfig.list", "w") as f:
+        for key in generated_keys:
+            f.write("{}\n".format(key))
+        for key in generated_kv:
+            f.write("{}={}\n".format(key, generated_kv[key]))
+
+
+def generate_config_list():
+    welcome_prompt()
+    generated_keys = generate_keys()
+    generated_kv = generate_kv()
+    write_config_list(generated_keys,
+                      generated_kv)
+
+
+
+def define(line, config):
+
+    line = line.split('=')
+
+    if len(line) == 1:
+        config.write("#define {}".format(line[0]))
+    else:
+        config.write("#define {} {}".format(line[0], line[1]))
+
+
+def undef(line, config):
+
+    line = line.split('=')
+    config.write("#undef {}".format(line[0]))
+
+def generate_kconfig_header(klist):
+
+    with open("include/kconfig.h", "w") as config:
+
+        config.write("#ifndef KCONFIG_H\n"
+                     "#define KCONFIG_H\n\n")
+
+        for line in klist:
+
+            line.strip()
+
+            if line[0] == '\n':
+                continue
+
+            if line[0] == '!':
+                undef(line[1:], config)
+            else:
+                define(line, config)
+
+        config.write("\n#endif /* KCONFIG_H */")
+
+
+def main():
+
+    try:
+        f = open("scripts/kconfig.list", "r")
+    except IOError:
+        print("kconfig.list not found!")
+        generate_config_list()
+        exit()
+
+    generate_kconfig_header(f)
+
+    f.close()
+
+
+
+
+if __name__ == "__main__":
+    main()
