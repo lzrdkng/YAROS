@@ -22,6 +22,44 @@
   hardware and in a simulator. It would be great to test it on
   different MCU.
 
+** Supported MCU for Scheduling
+*** TODO Atmega [9/35]
+    - [-] 8
+    - [-] 8l
+    - [-] 16
+    - [-] 32
+    - [-] 32u4
+    - [-] 48
+    - [-] 48P
+    - [-] 48PA
+    - [-] 88
+    - [-] 88P
+    - [-] 88PA
+    - [-] 128
+    - [-] 128L
+    - [-] 128rtfa1
+    - [-] 128rfr2
+    - [X] 164
+    - [X] 164A 
+    - [X] 164PA
+    - [-] 168
+    - [-] 168P
+    - [-] 168PA
+    - [X] 324
+    - [X] 324P
+    - [X] 324A
+    - [X] 324PA
+    - [-] 328
+    - [-] 328p
+    - [-] 644
+    - [-] 644A
+    - [-] 644PA
+    - [-] 1280
+    - [-] 1281
+    - [X] 1284
+    - [X] 1284P
+    - [-] 2560
+
 * GNU11
   I use *GNU11* extension for *C*. Notable usage is functioning
   attributes and flexible array members. The latest is not compatible
