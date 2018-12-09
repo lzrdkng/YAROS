@@ -22,7 +22,7 @@ MCU = atmega324pa
 ARCH = atmega
 
 # Device's Driver
-DD = $(MCU) 24XX512
+DD = $(MCU)
 
 # Target Archive
 TARGET = $(TARGET_DIR)/libYAROS.a

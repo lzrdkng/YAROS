@@ -199,15 +199,4 @@ kill_task(struct task *task);
         init_task(TASK, FUNC, DATA);            \
         resume(TASK);                           \
 	})
-
-/**
- * @brief Prepare the stack for a new task.
- *
- * This is architecture dependant, because if's written in assembly.
- *
- * @note This is legacy code. The new function is defined in task.c
- * has prepare_stack.
- */
-NAKED DEPRECATED("This is legacy code. Don't use it") void
-arch_prepare_stack(U8 *stack, taskfunc func);
 #endif /* TASK_H */

@@ -23,7 +23,7 @@
 #if defined(__AVR_ATmega324PA__)
 #  include "drivers/usart/usart_atmega324pa.h"
 #else
-# error "Architecture not supported!"
+# warning "Architecture not supported!"
 #endif
 
 void

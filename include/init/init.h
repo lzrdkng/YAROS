@@ -23,6 +23,6 @@ struct task;
 void
 kinit();
 
-void __attribute__((naked))
+void
 krun();
 #endif /* INIT_H */

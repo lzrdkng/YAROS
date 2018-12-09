@@ -29,6 +29,7 @@
 #define likely likely
 #define unlikely unlikely
 
+#define cast(TYPE, ...) ( TYPE ) ( __VA_ARGS__ )
 #define static_assert _Static_assert
 #define assert_type(t1, t2) static_assert(__builtin_types_compatible_P(t1, t2), "Type does not match")
 

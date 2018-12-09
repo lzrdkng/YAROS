@@ -51,8 +51,6 @@ krun()
     struct task *T;
 
     enable_irq(IRQ_TIMER0_OVF);
-
-
     /* If no task is scheduled for running */
     if (dlist_is_empty(&running_queue)) {
 #if defined(TODO_NO_PANIC) && 0

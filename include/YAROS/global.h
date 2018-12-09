@@ -23,7 +23,7 @@
 #include "util/dlist.h"
 
 #undef X
-#define X(TYPE, NAME, ...) extern TYPE NAME ;
-#include "YAROS/global.xlist"
+#define X(VAR, ...) extern VAR ;
+#include "YAROS/global.xlist.h"
 
 #endif /* GLOBAL_H */

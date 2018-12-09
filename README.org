@@ -1,9 +1,9 @@
 * Yet Another Real-time OS
   *YAROS* is a small project of mine that I did during class for
    fun. It's my first attempt to make an OS kernel and it's not yet a
-   real-time OS, but I aim it to be.
+   real-time OS, but it will be.
 
-* TODO
+* Tasks TODO [0/10]
   - [-] Develop tests
   - [-] Better configuration script
   - [-] Better device driver selection
@@ -15,15 +15,14 @@
   - [-] Test on different MCU
   - [-] Profiler
 
-
-
 * MCU
-  I've been developing YAROS on a *ATmega324PA*,
-  hardware and in a simulator. It would be great to test it on
-  different MCU.
+  I've been developing YAROS on hardware and in a simulator for the
+  *ATmega324PA*. I plan to port it to different MCU and different avr
+  families.
 
 ** Supported MCU for Scheduling
-*** TODO Atmega [9/35]
+*** megaAVR Family [9/35]
+    
     - [-] 8
     - [-] 8l
     - [-] 16
@@ -61,7 +60,7 @@
     - [-] 2560
 
 * GNU11
-  I use *GNU11* extension for *C*. Notable usage is function
+  I use *GNU11* extensions for *C*. Notable usage are function
   attributes and flexible array members. The latest is not compatible
   with *C++*. This was a design decision because I needed everything
   to be compiled time. Although it would be possible to accomplish the
@@ -81,7 +80,44 @@
   configuration and control dependencies. \\
 
 * Xlist
-  I made extensive use of *X macros*, see the *.xlist* files.
+  I make extensive use of *X macros* to keep files synchronized, see
+  the *.xlist* files.
+
+* Definition of a Task
+  A task in YAROS is what we can refer to as a thread. There are 3
+  properties that you should consider when developing a task. Its
+  priority, its nice value and its stack size.
+
+** Priority
+   Task's priority range between 0 and 7 inclusive. The lower the
+   value is, the higher is the priority. As for now, the priority
+   only dictated the order of the task in the running queue. This
+   behaviour might change in the future.
+
+** Niceness
+   The nice value determine how much CPU time his allocated for the
+   task before rescheduling. We said that a task is nice to other if
+   its nice value is high. This means that the task will be running
+   less time before scheduling to another task. On the opposite, a
+   task that is not nice, i.e. with a low value of nice, will run
+   longer.
+
+** Stack size
+   The stack size is probably the most important value to
+   evaluate. Underestimate the value and you might overflow and corrupt
+   your RAM, resulting in an undefined behaviour. Overestimate and you
+   will waste RAM space. A good way to start is to put a high safe
+   value. Then, reduce the stack size until there's a problem. From
+   there, just return to your last safe point and add some padding
+   just to be extra careful. Stack overflow is the most common and
+   dangerous problem, be very cautious.
+
+   Note that the size of your stack is added with the minimal stack
+   value, which is 40 bytes. This minimal stack is to ensure there's
+   enough space for context switch. (32 registers + SREG + return
+   address + kill_self address = 37 bytes). I added a little padding
+   just to be cautious.
+
 
 * Example
   #+BEGIN_SRC C

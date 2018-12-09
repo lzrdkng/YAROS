@@ -27,6 +27,10 @@
 #  error "CONFIG_CLK: Kernel Clock is not defined."
 #endif
 
+#if KLCK == CLK_0
+#  define KCLK_vect TIMER0_OVF_vect
+#endif
+
 /*
  * Frequency at which the TIMER0_OVF_vect interrupt should be call.
  */

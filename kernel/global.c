@@ -19,5 +19,5 @@
 #include "YAROS/sysclk.h"
 
 #undef X
-#define X(TYPE, NAME, ...) TYPE NAME = __VA_ARGS__ ;
-#include "YAROS/global.xlist"
+#define X(VAR, ...) VAR = __VA_ARGS__ ;
+#include "YAROS/global.xlist.h"

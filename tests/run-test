@@ -3,7 +3,7 @@
 EXEC=./bin/test
 SIMULATOR=simavr
 TERMINAL=gnome-terminal
-MCU=atmega164
+MCU=atmega324pa
 F_CPU=8000000
 declare -a MCU_SIMAVR=(atmega328
                        atmega328p
