@@ -248,6 +248,9 @@ ISR(KCLK_vect, ISR_NAKED)
     restore_minimal_context();
 
     reti();
+
+
+
 }
 
 /**

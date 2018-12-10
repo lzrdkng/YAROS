@@ -59,6 +59,8 @@
 #define ERROR(STR) ({do {} while (0);})
 #define FATAL(STR) ({do {} while (0);})
 
+#define MSG_FMT(STR) __FILE__ ":" xstr(__LINE__) ":" STR
+
 extern const char NL[] PROGMEM;
 extern void __send_debug_header();
 extern void __send_info_header();
@@ -72,7 +74,7 @@ extern void __send_nl();
 #undef DEBUG
 #define DEBUG(STR) \
 	({			   \
-	static const char __DEBUG_STR__[] PROGMEM = STR; \
+          static const char __DEBUG_STR__[] PROGMEM = MSG_FMT(STR);     \
 	char __debug_buff__[1];									\
 	__send_debug_header();												\
 	for (U16 __debug_i__=0; __debug_i__<sizeof(__DEBUG_STR__); ++__debug_i__) { \
@@ -87,7 +89,7 @@ extern void __send_nl();
 #undef INFO
 #define INFO(STR) \
 	({			   \
-	static const char __INFO_STR__[] PROGMEM = STR; \
+	static const char __INFO_STR__[] PROGMEM = MSG_FMT(STR); \
 	char __info_buff__[1];									\
 	__send_info_header();												\
 	for (U16 __info_i__=0; __info_i__<sizeof(__INFO_STR__); ++__info_i__) { \
@@ -103,7 +105,7 @@ extern void __send_nl();
 #undef WARNING
 #define WARNING(STR) \
 	({			   \
-	static const char __WARNING_STR__[] PROGMEM = STR; \
+	static const char __WARNING_STR__[] PROGMEM =  MSG_FMT(STR);     \
 	char __warning_buff__[1];									\
 	__send_warning_header();											\
 	for (U16 __warning_i__=0; __warning_i__<sizeof(__WARNING_STR__); ++__warning_i__) { \
@@ -118,7 +120,7 @@ extern void __send_nl();
 #undef ERROR
 #define ERROR(STR) \
 	({			   \
-	static const char __ERROR_STR__[] PROGMEM = STR; \
+	static const char __ERROR_STR__[] PROGMEM =  MSG_FMT(STR);     \
 	char __error_buff__[1];									\
 	__send_error_header();												\
 	for (U16 __error_i__=0; __error_i__<sizeof(__ERROR_STR__); ++__error_i__) { \
@@ -134,7 +136,7 @@ extern void __send_nl();
 #undef FATAL
 #define FATAL(STR) \
 	({			   \
-	static const char __FATAL_STR__[] PROGMEM = STR; \
+	static const char __FATAL_STR__[] PROGMEM = MSG_FMT(STR);     \
 	char __fatal_buff__[1];									\
 	__send_fatal_header();												\
 	for (U16 __fatal_i__=0; __fatal_i__<sizeof(__FATAL_STR__); ++__fatal_i__) { \

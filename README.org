@@ -118,7 +118,6 @@
    address + kill_self address = 37 bytes). I added a little padding
    just to be cautious.
 
-
 * Example
   #+BEGIN_SRC C
     #include "YAROS.h"

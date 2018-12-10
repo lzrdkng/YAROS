@@ -14,8 +14,7 @@
 
 # Olivier Dion <olivier.dion@polymtl.ca>
 
-
-
+SHELL=/bin/sh
 
 # Microcontroller
 MCU = atmega324pa

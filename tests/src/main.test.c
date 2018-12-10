@@ -37,7 +37,11 @@ do_foo(void *bar_task)
 {
     static const char foo_str[] = {'f', 'o', 'o', '\n'};
 
+    DEBUG("Entering do_foo");
+
     while (1) {
+
+
 
         /* Write "foo_str\n" to USART 0 */
         write_usart(0, foo_str, sizeof(foo_str));
