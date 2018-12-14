@@ -19,7 +19,7 @@
  * twi driver for the atmega324pa
  */
 
-#include "YAROS/errno.h"
+#include "kernel/errno.h"
 
 #include "devices/twi.h"
 

@@ -1,0 +1,11 @@
+@deftypefn {Macro} {} run_task @
+  (@code{TASK}, @code{FUNC}, @code{DATA})
+@sp 1
+Initialize and resume a task.
+@sp 1
+@expansion{}
+(@{
+init_task(@code{TASK}, @code{FUNC}, @code{DATA});
+resume(@code{TASK});
+@})
+@end deftypefn

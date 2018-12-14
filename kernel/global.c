@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "YAROS/global.h"
-#include "YAROS/sysclk.h"
+#include "kernel/global.h"
+#include "kernel/sysclk.h"
 
 #undef X
 #define X(VAR, ...) VAR = __VA_ARGS__ ;
-#include "YAROS/global.xlist.h"
+#include "kernel/global.xlist.h"

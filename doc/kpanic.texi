@@ -1,0 +1,8 @@
+@deftypefn {} void kpanic @
+  (void)
+@sp 1
+Stop all system activities and print @print{} KERNEL PANIC.
+@sp 1
+@warning{}
+The kernel can not recover from a panic.
+@end deftypefn

@@ -1,0 +1,11 @@
+@deftypefn {Atomic} void kill_task @
+  (struct task *@code{task})
+@sp 1
+Kill the task pointed by @code{task}.
+@sp 1
+@note{}
+If @code{task} is @code{NULL}, kill the calling task.
+@sp 1
+@warning{}
+Killing the last running task will triggered a kernel panic.
+@end deftypefn

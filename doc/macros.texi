@@ -1,0 +1,99 @@
+@c This macro simple expand to the argument. It's useful for when you
+@c want to pass multiple word as single value
+@macro identity{arg}
+\arg\
+@end macro
+
+@c Concatenate two words
+@macro cat{a, b}
+\a\\b\
+@end macro
+
+@macro note{}
+@b{Note: }
+@end macro
+
+@macro warning{}
+@b{Warning: }
+@end macro
+
+@macro func{name}
+@include \name\.texi
+@sp 3
+@end macro
+
+@iftex
+
+@macro str{TEXT}
+
+@tex
+@backslashchar{}str{\TEXT\}
+@end tex
+
+@end macro
+
+@macro kwd{TEXT}
+
+@tex
+@backslashchar{}kwd{\TEXT\}
+@end tex
+
+@end macro
+
+@macro com{TEXT}
+
+@tex
+@backslashchar{}com{\TEXT\}
+@end tex
+
+@end macro
+
+@macro typ{TEXT}
+
+@tex
+@backslashchar{}typ{\TEXT\}
+@end tex
+
+@end macro
+
+@macro lit{TEXT}
+
+@tex
+@backslashchar{}lit{\TEXT\}
+@end tex
+
+@end macro
+
+@tex
+@c https://github.com/google/code-prettify/blob/master/src/prettify.css
+\gdef\str#1{\pdfliteral{0 0.5333 0 rg}#1\pdfliteral{0 0 0 rg}}
+\gdef\kwd#1{\pdfliteral{0 0 0.5333 rg}#1\pdfliteral{0 0 0 rg}}
+\gdef\com#1{\pdfliteral{0.5333 0 0 rg}#1\pdfliteral{0 0 0 rg}}
+\gdef\typ#1{\pdfliteral{0.4 0 0.4 rg}#1\pdfliteral{0 0 0 rg}}
+\gdef\lit#1{\pdfliteral{0 0.4 0.4 rg}#1\pdfliteral{0 0 0 rg}}
+@end tex
+@end iftex
+
+@ifnottex
+
+@macro str{TEXT}
+\TEXT\
+@end macro
+
+@macro kwd{TEXT}
+\TEXT\
+@end macro
+
+@macro com{TEXT}
+\TEXT\
+@end macro
+
+@macro typ{TEXT}
+\TEXT\
+@end macro
+
+@macro lit{TEXT}
+\TEXT\
+@end macro
+
+@end ifnottex

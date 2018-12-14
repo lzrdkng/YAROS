@@ -1,0 +1,8 @@
+@deftypefn {Atomic} void kill_self @
+  (void)
+@sp 1
+Kill the calling task and reschedule.
+@sp 1
+@warning{}
+Killing the last running task will triggered a kernel panic.
+@end deftypefn

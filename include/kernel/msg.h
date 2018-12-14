@@ -21,8 +21,8 @@
 #include <avr/pgmspace.h>
 #include <string.h>
 
-#include "YAROS/def.h"
-#include "YAROS/errno.h"
+#include "kernel/def.h"
+#include "kernel/errno.h"
 
 #include "devices/usart.h"
 

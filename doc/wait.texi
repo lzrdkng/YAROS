@@ -1,0 +1,5 @@
+@deftypefn {} void wait @
+  (jiffy_t @code{delay})
+@sp 1
+Reschedule the calling task until @code{delay} has passed.
+@end deftypefn

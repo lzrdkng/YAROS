@@ -1,0 +1,9 @@
+@deftypefn {Atomic} void resume @
+  (struct task *@code{task})
+@sp 1
+Put the task pointed by @code{task} in the running queue.  If @code{NULL} is
+passed, the calling task is put in the running queue.
+@sp 1
+@note{}
+Resuming a task that is already running has no effect.
+@end deftypefn

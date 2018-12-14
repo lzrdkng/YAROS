@@ -18,7 +18,7 @@
 #ifndef PANIC_H
 #define PANIC_H
 
-#include "YAROS/def.h"
+#include "kernel/def.h"
 
 NO_RETURN void
 kpanic();

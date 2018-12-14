@@ -1,0 +1,8 @@
+@deftypefn {} void krun @
+  (void)
+@sp 1
+Launch the kernel scheduler.  This should be the last thing in your main.
+@sp 1
+@warning{}
+If no task is scheduled, the kernel will spin a loop until a task is scheduled.
+@end deftypefn

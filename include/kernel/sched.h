@@ -18,9 +18,9 @@
 #ifndef SCHED_H
 #define SCHED_H
 
-#include "YAROS/def.h"
-#include "YAROS/global.h"
-#include "YAROS/task.h"
+#include "kernel/def.h"
+#include "kernel/global.h"
+#include "kernel/task.h"
 
 #include "util/dlist.h"
 

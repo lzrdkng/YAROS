@@ -1,0 +1,9 @@
+@deftypefn {Atomic} void reschedule @
+  (void)
+@sp 1
+Force rescheduling, @i{i.e.} do not wait for the kernel to switch the
+context.
+@sp 1
+@note{}
+Rescheduling when there's only one task running has no effect.
+@end deftypefn

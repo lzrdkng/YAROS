@@ -1,0 +1,5 @@
+@deftypefn {} U64 clk @
+  (void)
+@sp 1
+Return the time in milliseconds since the kernel was launched.
+@end deftypefn

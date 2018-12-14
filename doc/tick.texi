@@ -1,0 +1,5 @@
+@deftypefn {Atomic} jiffy_t tick @
+  (void)
+@sp 1
+Return the number of jiffies ellapsed since the kernel was launched.
+@end deftypefn

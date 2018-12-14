@@ -21,9 +21,9 @@
 #include <util/atomic.h>
 #include <util/delay.h>
 
-#include "YAROS/def.h"
-#include "YAROS/sched.h"
-#include "YAROS/global.h"
+#include "kernel/def.h"
+#include "kernel/sched.h"
+#include "kernel/global.h"
 
 /* For 8Mhz. TODO: Make this good for every frequency */
 #if HZ == 50
@@ -65,28 +65,29 @@
 INLINE jiffy_t
 tick()
 {
-	jiffy_t j;
+  jiffy_t j;
 
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-        j = jiffies;
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {
+      j = jiffies;
     }
 
-	return j;
+  return j;
 }
 
 INLINE U64
 clk(void)
 {
-	return MS * cast(U64, tick());
+  return MS * cast(U64, tick());
 }
 
 INLINE void
 wait(jiffy_t delay)
 {
-	jiffy_t until = tick() + delay;
+  jiffy_t until = tick() + delay;
 
-	while (time_before(tick(), until))
-		reschedule();
+  while (time_before(tick(), until))
+    reschedule();
 }
 
 #endif /* SYSCLK_H */

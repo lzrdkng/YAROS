@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "YAROS/def.h"
-#include "YAROS/global.h"
-#include "YAROS/sched.h"
-#include "YAROS/sysclk.h"
-#include "YAROS/msg.h"
+#include "kernel/def.h"
+#include "kernel/global.h"
+#include "kernel/sched.h"
+#include "kernel/sysclk.h"
+#include "kernel/msg.h"
 
 #include "devices/clk.h"
 #include "devices/irq.h"

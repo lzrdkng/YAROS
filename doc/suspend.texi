@@ -1,0 +1,14 @@
+@deftypefn {Atomic} void suspend @
+  (struct task *@code{task})
+@sp 1
+Put the task pointed by @code{task} in the sleeping queue.  If @code{NULL} is
+passed, the calling task is put in the sleeping queue.
+@sp 1
+@note{}
+Suspending a task that is already sleeping has no effect.
+@sp 1
+@warning{}
+As for now, if the last running task is suspending itself, the kernel
+panic.  This might change in the future by putting the system in low
+energy mode.
+@end deftypefn

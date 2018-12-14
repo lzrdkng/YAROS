@@ -19,10 +19,9 @@
 #ifndef TASK_H
 #define TASK_H
 
-#include "YAROS/errno.h"
-#include "YAROS/def.h"
-#include "YAROS/event.h"
-#include "YAROS/suspend.h"
+#include "kernel/errno.h"
+#include "kernel/def.h"
+#include "kernel/suspend.h"
 
 #include "util/dlist.h"
 
@@ -47,19 +46,19 @@
  * the members initializer.
  */
 #define TASK(PRIO, NICE, SIZE)                                          \
-    {																	\
-        .this = {NULL, NULL},                                           \
-		.stack_pointer = NULL,											\
-		.running = TASK_SLEEP,											\
-		.priority = PRIO,												\
-		.nice = NICE,													\
-		.size = SIZE + MIN_STACK_SIZE,									\
-		.stack[0 ... (SIZE + MIN_STACK_SIZE - 1)] = 0					\
-	};                                                                  \
-    static_assert( PRIO < TASK_MAX_PRIORITY, "Priority value is too big."); \
-    static_assert( NICE < TASK_MAX_NICE, "Nice value is too big.");     \
-    static_assert( SIZE >= 0, "Stack size must be greater or equal to 0."); \
-    static_assert( (SIZE + MIN_STACK_SIZE) <= MAX_STACK_SIZE, "Stack size if too big.")
+  {                                                                     \
+   .self = {NULL, NULL},                                                \
+   .stack_pointer = NULL,                                               \
+   .running = TASK_SLEEP,                                               \
+   .priority = PRIO,                                                    \
+   .nice = NICE,                                                        \
+   .size = SIZE + MIN_STACK_SIZE,                                       \
+   .stack[0 ... (SIZE + MIN_STACK_SIZE - 1)] = 0                  r      \
+  };                                                                    \
+  static_assert( PRIO < TASK_MAX_PRIORITY, "Priority value is too big."); \
+  static_assert( NICE < TASK_MAX_NICE, "Nice value is too big.");       \
+  static_assert( SIZE >= 0, "Stack size must be greater or equal to 0."); \
+  static_assert( (SIZE + MIN_STACK_SIZE) <= MAX_STACK_SIZE, "Stack size if too big.")
 
 
 
@@ -70,35 +69,35 @@
 #define TASK_RUN 0b1
 
 enum task_priority {
-	TASK_P0 = 0b000,
-	TASK_P1,
-	TASK_P2,
-	TASK_P3,
-	TASK_P4,
-	TASK_P5,
-	TASK_P6,
-	TASK_P7,
-    TASK_MAX_PRIORITY
+                    TASK_P0 = 0b000,
+                    TASK_P1,
+                    TASK_P2,
+                    TASK_P3,
+                    TASK_P4,
+                    TASK_P5,
+                    TASK_P6,
+                    TASK_P7,
+                    TASK_MAX_PRIORITY
 };
 
 enum task_nice {
-	TASK_N0 = 0b0000,
-	TASK_N1,
-	TASK_N2,
-	TASK_N3,
-	TASK_N4,
-	TASK_N5,
-	TASK_N6,
-	TASK_N7,
-	TASK_N8,
-	TASK_N9,
-	TASK_N10,
-	TASK_N11,
-	TASK_N12,
-	TASK_N13,
-	TASK_N14,
-	TASK_N15,
-	TASK_MAX_NICE
+                TASK_N0 = 0b0000,
+                TASK_N1,
+                TASK_N2,
+                TASK_N3,
+                TASK_N4,
+                TASK_N5,
+                TASK_N6,
+                TASK_N7,
+                TASK_N8,
+                TASK_N9,
+                TASK_N10,
+                TASK_N11,
+                TASK_N12,
+                TASK_N13,
+                TASK_N14,
+                TASK_N15,
+                TASK_MAX_NICE
 };
 
 /**
@@ -114,13 +113,13 @@ enum task_nice {
  *
  * - running_queue is the list of "ready for scheduling" tasks.
  *
- * - sleeping_queue is the lsit of "waiting for event" tasks.
+ * - sleeping_queue is the list of "waiting for event" tasks.
  *
  * Each task has a time slice. Once that time slice has expired, the
  * task is put at the tail of the running queue according to its
  * priority and its time slice is renew according to its nice value.
  *
- * @var task::this Intrusive double linked list. This is what we use
+ * @var task::self Intrusive double linked list. This is what we use
  * to put the task in the running or sleeping queue for example.
  *
  * @var task::stack_pointer This is the saved SP of the task. Every
@@ -135,19 +134,18 @@ enum task_nice {
  * of the stack will always have the kill_self function.
  *
  * @note It's very important that the first member of the task is
- * task::this. This is because that way we can say that the task is
+ * task::self. This is because that way we can say that the task is
  * "this". Therefore, you will often see some casting from a pointer
  * of struct dlist to a pointer of struct task. Basic inheritance.
  */
 struct task {
-	struct dlist this;
-	U16 * volatile stack_pointer;
-	event_t event;
-	U8 running:1;
-	U8 priority:3;
-	U8 nice:4;
-	sstack_t size;
-	U8 stack[];
+  struct dlist self;
+  U16 * volatile stack_pointer;
+  U8 running:1;
+  U8 priority:3;
+  U8 nice:4;
+  sstack_t size;
+  U8 stack[];
 };
 
 /**
@@ -195,8 +193,8 @@ kill_task(struct task *task);
  * @brief Initialize and wake up a task.
  */
 #define run_task(TASK, FUNC, DATA)              \
-	({											\
-        init_task(TASK, FUNC, DATA);            \
-        resume(TASK);                           \
-	})
+  ({                                            \
+    init_task(TASK, FUNC, DATA);                \
+    resume(TASK);                               \
+  })
 #endif /* TASK_H */

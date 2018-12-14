@@ -18,7 +18,7 @@
 #ifndef ADC_M324PA_H
 #define ADC_M324PA_H
 
-#include "YAROS/errno.h"
+#include "kernel/errno.h"
 
 #include <avr/io.h>
 

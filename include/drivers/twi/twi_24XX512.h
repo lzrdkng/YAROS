@@ -18,7 +18,7 @@
 #ifndef TWI_24XX512_H
 #define TWI_24XX512_H
 
-#include "YAROS/type.h"
+#include "kernel/type.h"
 
 #include "devices/twi.h"
 

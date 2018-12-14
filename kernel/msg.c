@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "YAROS/msg.h"
+#include "kernel/msg.h"
 
 #if VERBOSE_LEVEL >= 5
 const char DEBUG_HEADER[] PROGMEM = GREEN("[DEBUG] ");

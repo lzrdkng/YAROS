@@ -1,0 +1,22 @@
+@deftp {struct} dlist
+@ifhtml
+@html
+<pre class="prettyprint lang-c">
+@end html
+@{
+@ @ @ @ struct dlist *next, *prev;
+@};
+@html
+</pre>
+@end html
+@end ifhtml
+@ifnothtml
+@{
+
+@ @ @ @ @kwd{struct} @typ{dlist} *next, *prev;
+
+@};
+@end ifnothtml
+@sp 1
+Doubly linked list intrusive.
+@end deftp

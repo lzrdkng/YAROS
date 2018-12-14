@@ -20,10 +20,10 @@
  * @brief YAS' tasks scheduler.
  */
 
-#include "YAROS/sched.h"
-#include "YAROS/global.h"
-#include "YAROS/task.h"
-#include "YAROS/panic.h"
+#include "kernel/sched.h"
+#include "kernel/global.h"
+#include "kernel/task.h"
+#include "kernel/panic.h"
 
 #include "util/dlist.h"
 

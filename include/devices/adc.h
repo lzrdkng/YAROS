@@ -20,7 +20,7 @@
 #ifndef ADC_H
 #define ADC_H
 
-#include "YAROS/def.h"
+#include "kernel/def.h"
 
 #if defined(__AVR_ATmega324PA__)
 #  include "drivers/adc/adc_atmega324pa.h"

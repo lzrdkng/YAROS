@@ -1,0 +1,477 @@
+\input texinfo @c -*-texinfo-*-
+@c %**start of header
+@setfilename YAROS.info
+@documentencoding UTF-8
+@documentlanguage en
+@settitle Using YAROS Version 0.1.0
+@setchapternewpage odd
+
+@finalout
+
+
+@include macros.texi
+
+@c %**end of header
+
+@copying
+This manual is for using YAROS, version 0.1.0 .
+
+Copyright @copyright{} 2018 Olivier Dion
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled "GNU
+Free Documentation License".
+@end quotation
+@end copying
+
+@titlepage
+@title YAROS
+@subtitle A RTOS for embedded systems
+@author by Olivier Dion
+
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+
+@c Published by ...
+@end titlepage
+
+@c TOC
+@contents
+
+@ifnottex
+
+@node Top
+@top YAROS
+@insertcopying
+
+@menu
+* Prologue:: What is YAROS
+
+Introduction sections:
+* Concepts:: The concepts of YAROS
+* Examples:: Few examples
+
+Reference sections:
+* Internal:: How YAROS work internally.
+* Glossary:: Glossary.
+* GNU Free Documentation License:: Copying this document.
+* Index of Functions::
+* Index of Structures::
+* Index of Variables::
+
+@detailmenu
+--- Detail Listing ---
+
+The Concepts of YAROS
+
+* C Dialect::  The dialect of the C programming language used for YAROS and why.
+* Xlist::      Usage of X macros in YAROS.
+* Task::       Definition of a Task.
+* Priority::   What is the priority of a task.
+* Niceness::   What is the niceness of a task.
+* Stack::      Why stack usage is important.
+* Scheduling:: How scheduling is done.
+
+@end detailmenu
+
+@end menu
+@end ifnottex
+
+@node Prologue
+@unnumbered Prologue
+@cindex RTOS
+A @acronym{RTOS, Real-Time Operating System} is by definition an
+@dfn{OS} that must deal with real-time deadlines for its applications.
+Those deadlines can either be hard or soft.  A hard deadline is one
+that will provoke a system failure if missed, therefore a
+@acronym{RTOS} that respects hard deadlines must guaranteed that all
+hard deadline are met.  A soft deadline is one that will not provoke a
+system failure if missed, but the @acronym{RTOS} must try to meet its
+requirement.
+
+@cindex YAROS
+@acronym{YAROS, Yet Another Real-time Operating System} aims to be a
+soft @acronym{RTOS} for embedded systems for the AVR architecture.  I
+don't personally like the letters OS in @acronym{RTOS},
+because in the case of @acronym{YAROS}, it's simply not true.
+@acronym{YAROS} is a kernel for embedded systems. It provides
+abstraction over devices drivers, tasks scheduling, system
+interruptions, etc.  It does not provides system applications or user
+applications, like an OS would do.
+
+I created @acronym{YAROS} during one of my course, out of boredom.
+After reading a few books on OS design, I decided to test my skills
+and knowledges by making my own kernel.  One can says that I was
+highly inspired by Linux, and it's entirely true.  I had no idea how
+to start, and I though that following the step of the giant would gave
+me a better idea of where to go.  I've used @acronym{YAROS} during the
+whole semester for every assignments and the final project.  It was
+for me a way to test and improve @acronym{YAROS}.  This is the past,
+but I want to continue this project to see where it can go and learn
+more from it.
+
+I would like to thank @b{Robert Love} for his book @cite{Linux Kernel
+Development}, that helped me understand the internal of Linux.
+
+@section How to Read this Manual
+You have to read this manual's sections linearly.  If you skip a
+section, you will not understand the next one.  But, you can skip
+chapter without getting too much confuse.  Although, it's recommended
+to not skip chapter.
+
+@section Improvement and Suggestion
+This is my first RTOS, but also my first manual.  If you have any
+suggestion or improvement for either YAROS or this manual, please feel
+free to send your comments to @email{olivier.dion@@polymtl.ca}.
+
+
+
+@node Concepts
+@chapter Concepts of YAROS
+This chapter will explain to you the concept of YAROS, without going
+into the internal details.  After reading this chapter, you should
+have a clear idea on what is the purpose of YAROS, and the concepts
+around it.
+
+@node C Dialect
+@section C Dialect
+@cindex GNU11
+YAROS uses @dfn{GNU} extensions for C.  Notable usage are function
+attributes, designated initializers and inline assembly.  YAROS also
+use flexible array member, which is not compatible with C++.  This was
+a design decision because YAROS needs everything to be compile time.
+Although it would be possible to accomplish the same thing using
+templates, it would also require to create a base type for the task
+structure.  The best thing would be to implement a memory manager to
+avoid using those compile time constraints.  Finally, here's a list of
+pros and cons for using C++.
+
+@itemize @bullet
+
+@item
+Pros
+
+        @itemize @minus
+
+        @item
+        Template meta-programming
+        
+
+@end itemize
+
+@item
+Cons
+
+        @itemize @minus
+
+        @item
+        Casting is not enough permissive
+
+        @item
+        Debugging mangled names is a real pain
+
+        @item
+        Operators overloading are useless
+
+        @item
+        Namespace are useless
+
+        @item
+        Default arguments are useless
+
+        @item
+        Exceptions and virtual tables are banned
+
+        @item
+        The whole C++ standard library and the STL are banned
+
+        @item
+        Will only work with C++ code
+
+@end itemize
+
+@end itemize
+
+As you can see, the only pros for using C++ is template for better
+meta-programming.  The cons outweigh the pros and therefore, only C
+shall be use for YAROS.  Maybe in the future C++ written like C will
+be used, nothing is cast into stone.
+
+@node Xlist
+@section Xlist
+@cindex Xlist
+YAROS makes extensive use of X macros to keep files synchronized.
+Every files that have a list of X macros have the extension
+@file{.xlist} .  An example would be the file
+@file{include/YAROS/global.xlist.h} that synchronizes the files
+@file{include/YAROS/global.h} and @file{kernel/global.c} .
+
+@node Task
+@section Definition of a Task
+@cindex Task
+A task in YAROS is what we can refer to as a thread.  There are 3
+properties that you should consider when developing a task. Its
+priority, its nice value and its stack size.
+
+@node Priority
+@section Task's Priority
+@cindex Task's Priority
+A task's priority range between 0 and 7 inclusive. The lower the value
+is, the higher is the priority.  As for now, the priority only
+dictated the order of the task in the running queue.  This behavior
+might change in the future.
+
+@node Niceness
+@section Task's Niceness
+@cindex Task's Niceness
+A task's nice value range between 0 and 15 inclusive. It determines how
+much CPU time his allocated for the task before rescheduling.  We said
+that a task is nice to other if its nice value is high.  This means
+that the task will be running less time before scheduling to another
+task.  On the opposite, a task that is not nice, @i{i.e}. with a low
+value of nice, will run longer.
+
+@node Stack
+@section Task's Stack Size
+@cindex Task's Stack Size
+The stack size is probably the most important value to
+evaluate.  Underestimate the value and you might overflow and corrupt
+your RAM, resulting in an undefined behavior.  Overestimate and you
+will waste RAM space.  A good way to start is to put a high safe
+value.  Then, reduce the stack size until there's a problem. From
+there, just return to your last safe point and add some padding just
+to be extra careful.  Stack overflow is the most common and dangerous
+problem, be very cautious.
+
+Note that the size of your stack is added with the minimal stack
+value, which is 40 bytes. This minimal stack is to ensure there's
+enough space for context switch.  32 registers + SREG + return address
++ kill_self address = 37 bytes.  There's a little of padding just to
+be extra cautious.
+
+@node Scheduling
+@section The Scheduler
+@cindex Scheduling
+YAROS is a time-sharing system.  It follows a simple @ref{round-robin} policy
+and is therefore preemptive.  It's athought possible for task to be
+cooperative by forcing scheduling.
+
+@page
+@section Functions
+This section will describe to you the interface that you can use with
+YAROS.  Functions that are tagged as @i{Atomic} are guaranteed to be
+executed without rescheduling.  Functions that are tagged as @i{Macro}
+are composite of regular or atomic function.
+
+@subsection Kernel Control
+These functions manipulate the kernel. 
+@func{kinit}
+@func{kpanic}
+@func{krun}
+
+@subsection Time Control
+These functions help you with getting the time.
+@func{clk}
+@func{tick}
+
+@subsection Task and Scheduler
+These functions give you control over the tasks and the scheduler
+@func{init_task}
+@func{kill_self}
+@func{kill_task}
+@func{reschedule}
+@func{resume}
+@func{run_task}
+@func{suspend}
+@func{wait}
+
+
+@node Examples
+@chapter Examples
+
+@section Defining the Tasks
+@ifnothtml
+@cartouche
+@end ifnothtml
+@example
+    @kwd{#include} @str{"YAROS.h"}
+
+    @com{/* foo has priority level 0,
+       nice value of 5 and a stack of 50 bytes */}
+    @kwd{struct} @typ{task} foo = TASK(TASK_P0, TASK_N5, 50);
+
+    @com{/* foo has priority level 4,
+       nice value of 9 and a stack of 75 bytes */}
+    @kwd{struct} @typ{task} bar = TASK(TASK_P4, TASK_N9, 75);
+
+    OS_TASK @kwd{void}
+    do_foo(@kwd{void} *task);
+
+    OS_TASK @kwd{void}
+    do_bar(@kwd{void} *nil);
+@end example
+@ifnothtml
+@end cartouche
+@end ifnothtml
+
+@section A Basic Main
+@ifnothtml
+@cartouche
+@end ifnothtml
+@example
+    @typ{int}
+    main(@typ{int} argc, @typ{char} *argv[])
+    @{
+        @com{/* Initialize the Kernel */}
+        kinit();
+
+        @com{/* Foo is scheduled */}
+        run_task(&foo,
+                 do_foo,
+                 &bar);
+
+        @com{/* Bar is suspended */}
+        init_task(&bar,
+                  do_bar,
+                  NULL);
+
+        @com{/* krun never return */}
+        krun();
+    @}
+@end example
+@ifnothtml
+@end cartouche
+@end ifnothtml
+
+@section The Tasks Implementation
+@ifnothtml
+@cartouche
+@end ifnothtml
+@example
+    OS_TASK @kwd{void}
+    do_foo(@kwd{void} *bar_task)
+    @{
+        @kwd{static const} @typ{char} foo_str[] = @{@str{'f'}, @str{'o'}, @str{'o'}, @str{'\n'}@};
+
+        @kwd{while} (@lit{1}) @{
+
+            @com{/* Write "foo_str\n" to USART 0 */}
+            write_usart(0, foo_str, @kwd{sizeof}(foo_str));
+
+            @com{/* Resume bar */}
+            resume(bar_task);
+
+            @com{/* Wait 1 second */}
+            wait(HZ);
+
+            @com{/* Suspend bar */}
+            suspend(bar_task);
+        @}
+    @}
+
+    OS_TASK @kwd{void}
+    do_bar(@kwd{void} *nil)
+    @{
+        @kwd{static const} @typ{char} bar_str[] = @{@str{'b'}, @str{'a'}, @str{'r'}, @str{'\n'} @};
+
+        @kwd{while} (@lit{1}) @{
+
+            @com{/* Write "bar\n" to USART 0 */}
+            write_usart(@lit{0}, bar_str, @kwd{sizeof}(bar_str));
+            
+            @com{/* Wait 1/2 second */}
+            wait(HZ / @lit{2});
+        @}
+    @}
+@end example
+@ifnothtml
+@end cartouche
+@end ifnothtml
+
+@node Internal
+@chapter The Internal of YAROS
+This chapter will explain to you how YAROS work internally.  After
+reading this chapter, you should be able to understand how the
+scheduler work with tasks, how interupts and devices are manage and
+how mutexes work.
+
+@section Structures
+@include struct_dlist.texi
+@include struct_task.texi
+
+@section Global Variales
+@include jiffies.texi
+@deftypevr {Global} jiffy_t jiffies
+Smallest unit of time
+@end deftypevr
+
+
+@section Configuration
+@defvr {Config Option} CONFIG_JIFFY
+foo foo foo
+@end defvr
+
+
+@node Glossary
+@appendix Glossary
+@cindex Glossary
+
+@table @asis
+
+@item Round-Robin Policy
+@anchor{round-robin}
+foo
+
+@item RTOS
+A RTOS is a real-time operating system.  It must be able to meet soft
+and hard deadline.  @xref{Prologue}.
+
+It has its own context (stack of execution)
+and is independent of other tasks.  Of course just like thread, tasks can be synchronize between them via mutexes or semaphores.  @xref{Task}.
+
+@item Xlist
+A Xlist is a list of terms wrapped in a X macro individually.  Xlist
+are useful to synchronize list of elements between files that use them
+but expand the X macro differently.  @xref{Xlist}.
+
+@item YAROS
+YAROS is a RTOS for embedded system for the AVR
+family.  It's the subject of this manual.  @xref{Prologue}.
+
+@end table
+
+
+
+@node GNU Free Documentation License
+@appendix Copying This Manual
+
+@include fld-1.3.texi
+
+@node Index of Functions
+@unnumbered Function and Macros Index
+
+@printindex fn
+
+@node Index of Structures
+@unnumbered List of Data Structures
+
+@printindex tp
+
+@node Index of Variables
+@unnumbered List of Global Variables
+
+@printindex vr
+
+@ifhtml
+@html
+<script type="text/javascript">
+@include script.js
+</script>
+@end html
+@end ifhtml
+@bye

@@ -18,7 +18,7 @@
 #ifndef EEPROM_H
 #define EEPROM_H
 
-#include "YAROS/def.h"
+#include "kernel/def.h"
 
 #if defined(__AVR_ATmega324PA__)
 #  include "drivers/eeprom/eeprom_atmega324pa.h"

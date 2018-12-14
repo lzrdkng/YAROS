@@ -1,0 +1,45 @@
+@deftp {struct} task
+@ifhtml
+@html
+<pre class="prettyprint lang-c">
+@end html
+@{
+@ @ @ @ struct dlist self;
+@ @ @ @ U16 * volatile stack_pointer;
+@ @ @ @ U8 running:1;
+@ @ @ @ U8 priority:3;
+@ @ @ @ U8 nice:4;
+@ @ @ @ sstack_t size;
+@ @ @ @ U8 stack[ ];
+@};
+@html
+</pre>
+@end html
+@end ifhtml
+@ifnothtml
+@{
+
+@ @ @ @ @kwd{struct} @typ{dlist} self;
+
+@ @ @ @ @typ{U16} * @kwd{volatile} stack_pointer;
+
+@ @ @ @ @typ{U8} running:@lit{1};
+
+@ @ @ @ @typ{U8} priority:@lit{3};
+
+@ @ @ @ @typ{U8} nice:@lit{4};
+
+@ @ @ @ @typ{sstack_t} size;
+
+@ @ @ @ @typ{U8} stack[ ];
+@};
+@end ifnothtml
+@sp 1
+A task is the central structure in YAROS.  The member @code{self} denote a node in a queue.  The node has 3 states.  It can either be attached to itself, therefore YAROS has no knowledge about the task.  It can be attached to the running queue.  Or it can be attached to the sleeping queue.
+
+@note{}
+The member @code{self} was called @code{this} before.  But because C++ use it as a keyword, it was changed to @code{self}.
+
+@note{}
+The type @typ{sstack_t} means @b{size stack type}.  It is an horrible name, so if you have a better idea for a typename, please submit it.
+@end deftp

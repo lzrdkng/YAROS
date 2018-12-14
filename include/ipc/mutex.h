@@ -18,7 +18,7 @@
 #ifndef IPC_H
 #define IPC_H
 
-#include "YAROS/sched.h"
+#include "kernel/sched.h"
 
 #include <util/atomic.h>
 

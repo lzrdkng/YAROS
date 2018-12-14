@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "YAROS/def.h"
-#include "YAROS/errno.h"
+#include "kernel/def.h"
+#include "kernel/errno.h"
 
 #include "devices/adc.h"
 #include "devices/irq.h"

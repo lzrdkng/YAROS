@@ -16,11 +16,11 @@
  */
 
 
-#include "YAROS/def.h"
-#include "YAROS/global.h"
-#include "YAROS/panic.h"
-#include "YAROS/sched.h"
-#include "YAROS/task.h"
+#include "kernel/def.h"
+#include "kernel/global.h"
+#include "kernel/panic.h"
+#include "kernel/sched.h"
+#include "kernel/task.h"
 
 
 #include "util/dlist.h"
@@ -98,7 +98,7 @@ static inline NON_NULL()  void
 __free_task(struct task *T)
 {
     T->running = TASK_SLEEP;
-    dlist_del(&(T->this));
+    dlist_del(&(T->self));
 }
 
 
@@ -110,7 +110,7 @@ init_task(struct task *T,
     /*
      * Initialize the linked list.
      */
-    INIT_DLIST(&T->this);
+    INIT_DLIST(&T->self);
 
     /*
      * Clear the stack
@@ -181,7 +181,7 @@ kill_task(struct task *T)
      */
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
 
-        if (&T->this == current_task || T == NULL)
+        if (&T->self == current_task || T == NULL)
             kill_self();
 
         __free_task(T);

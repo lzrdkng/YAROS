@@ -19,9 +19,9 @@
 /* Standard */
 #include <assert.h>
 
-#include "YAROS/config.h"
-#include "YAROS/type.h"
-#include "YAROS/errno.h"
+#include "kernel/config.h"
+#include "kernel/type.h"
+#include "kernel/errno.h"
 
 #define xstr(s) str(s)
 #define str(s) #s

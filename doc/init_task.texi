@@ -1,0 +1,10 @@
+@deftypefn {} {struct task*} init_task @
+  (struct task *@code{task}, taskfunc @code{func}, void *@code{data})
+@sp 1
+Initialize the task pointed by @code{task} with function entry point
+pointed by @code{func} and parameter passed to the entry point,
+pointed by @code{data}.
+@sp 1
+@warning{}
+@code{task} and @code{func} can not be @code{NULL}.
+@end deftypefn

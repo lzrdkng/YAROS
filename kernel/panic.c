@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "YAROS/panic.h"
-#include "YAROS/sched.h"
+#include "kernel/panic.h"
+#include "kernel/sched.h"
 #include "devices/usart.h"
 
 #include <avr/pgmspace.h>

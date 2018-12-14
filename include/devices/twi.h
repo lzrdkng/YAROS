@@ -19,8 +19,8 @@
 #ifndef TWI_H
 #define TWI_H
 
-#include "YAROS/def.h"
-#include "YAROS/errno.h"
+#include "kernel/def.h"
+#include "kernel/errno.h"
 
 #if defined(__AVR_ATmega324PA__)
 #  include "drivers/twi/twi_atmega324pa.h"

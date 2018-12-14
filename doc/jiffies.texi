@@ -1,0 +1,8 @@
+@deftypevr {Global} @typ{jiffy_t} jiffies
+Just like a clock has a finite precision, YAROS has it own limit when
+it come to counting time, and this limit is call a jiffy.  We define a
+jiffy to be the smallest unit of time for the system.  The variable
+@code{jiffies} hold the amount of jiffies ellapsed since the system
+had started.  This variable is increment @code{HZ} times per second,
+
+@end deftypevr

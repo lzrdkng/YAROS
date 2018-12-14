@@ -18,7 +18,7 @@
 #ifndef USART_H
 #define USART_H
 
-#include "YAROS/def.h"
+#include "kernel/def.h"
 
 #if defined(__AVR_ATmega324PA__)
 #  include "drivers/usart/usart_atmega324pa.h"

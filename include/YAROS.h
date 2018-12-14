@@ -18,15 +18,15 @@
 #ifndef YAROS_H
 #define YAROS_H
 
-#include "YAROS/def.h"
-#include "YAROS/errno.h"
-#include "YAROS/msg.h"
-#include "YAROS/panic.h"
-#include "YAROS/sched.h"
-#include "YAROS/suspend.h"
-#include "YAROS/sysclk.h"
-#include "YAROS/task.h"
-#include "YAROS/type.h"
+#include "kernel/def.h"
+#include "kernel/errno.h"
+#include "kernel/msg.h"
+#include "kernel/panic.h"
+#include "kernel/sched.h"
+#include "kernel/suspend.h"
+#include "kernel/sysclk.h"
+#include "kernel/task.h"
+#include "kernel/type.h"
 
 #include "devices/adc.h"
 #include "devices/clk.h"

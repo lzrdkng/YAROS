@@ -15,8 +15,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IO_H
-#define IO_H
+#ifndef SLEEP_H
+#define SLEEP_H
+
+#include "kernel/def.h"
+
+struct task;
+
+/**
+ * @brief Put a task in the sleeping queue
+ *
+ * @task The task to put the in the sleeping queue, or NULL for the
+ * current task.
+ *
+ * @note Putting the current task in sleep will reschedule to the next
+ * task.
+ */
+void
+_suspend(struct task *task);
+
+#define suspend(...) \
+  do { ATOMIC_BLOCK(ATOMIC_RESTORESTATE) { _suspend( __VA_ARGS__ ); } } while(0)
 
 
-#endif /* IO_H */
+
+/**
+ * @brief Wake up an initialized task.
+ *
+ * Move the task from the sleeping queue to the running queue.
+ *
+ * @param T The task to wake up.
+ */
+NON_NULL() void
+resume(struct task *task);
+#endif /* SLEEP_H */

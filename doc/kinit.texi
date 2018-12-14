@@ -1,0 +1,8 @@
+@deftypefn {} void kinit @
+  (void)
+@sp 1
+Initiliaze the kernel.  This should be the first function you call in your main.
+@sp 1
+@warning{}
+Using YAROS without initializing the kernel first result in undefined behavior.
+@end deftypefn

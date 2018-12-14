@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "YAROS/def.h"
-#include "YAROS/global.h"
-#include "YAROS/panic.h"
-#include "YAROS/task.h"
-#include "YAROS/sched.h"
+#include "kernel/def.h"
+#include "kernel/global.h"
+#include "kernel/panic.h"
+#include "kernel/task.h"
+#include "kernel/sched.h"
 #include "devices/irq.h"
 
 #include "init/init.h"
@@ -65,10 +65,10 @@ krun()
     /*
      * Bootstrap the first task
      */
-    T = dlist_first_entry(&running_queue, struct task, this);
+    T = dlist_first_entry(&running_queue, struct task, self);
 
     stack_pointer = T->stack_pointer;
-    current_task = &T->this;
+    current_task = &T->self;
 
     __reset_time_slice((struct task *)current_task);
 

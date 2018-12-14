@@ -19,7 +19,7 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-#include "YAROS/def.h"
+#include "kernel/def.h"
 
 #if defined (__AVR_ATmega324PA__)
 #  include "drivers/clk/clk_atmega324pa.h"

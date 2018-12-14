@@ -22,7 +22,7 @@
 
 #include <avr/io.h>
 
-#include "YAROS/msg.h"
+#include "kernel/msg.h"
 
 #include "devices/usart.h"
 
