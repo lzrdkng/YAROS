@@ -306,6 +306,7 @@ pdf: $(DIRECTORIES) build/pdf/YAROS.pdf
 ps: $(DIRECTORIES) build/ps/YAROS.ps
 
 MAKEINFO = makeinfo
+MAKEPDF = texi2pdf
 
 build/info/YAROS.info: doc/YAROS.texi
 	@cd build/info && $(MAKEINFO) --info ../../$<
@@ -317,7 +318,7 @@ build/dvi/YAROS.dvi: doc/YAROS.texi
 	@cd build/dvi && $(MAKEINFO) --dvi ../../$<
 
 build/pdf/YAROS.pdf: doc/YAROS.texi
-	@cd build/pdf && $(MAKEINFO) --pdf ../../$<
+	@cd build/pdf && $(MAKEPDF) --command="@set tex-pdf" ../../$<
 
 build/ps/YAROS.ps: doc/YAROS.texi
 	@cd build/ps && $(MAKEINFO) --ps ../../$<

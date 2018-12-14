@@ -22,7 +22,7 @@
 @sp 3
 @end macro
 
-@iftex
+@ifset tex-pdf
 
 @macro str{TEXT}
 
@@ -72,9 +72,9 @@
 \gdef\typ#1{\pdfliteral{0.4 0 0.4 rg}#1\pdfliteral{0 0 0 rg}}
 \gdef\lit#1{\pdfliteral{0 0.4 0.4 rg}#1\pdfliteral{0 0 0 rg}}
 @end tex
-@end iftex
+@end ifset
 
-@ifnottex
+@ifclear tex-pdf
 
 @macro str{TEXT}
 \TEXT\
@@ -96,4 +96,4 @@
 \TEXT\
 @end macro
 
-@end ifnottex
+@end ifclear

@@ -208,8 +208,8 @@ be used, nothing is cast into stone.
 YAROS makes extensive use of X macros to keep files synchronized.
 Every files that have a list of X macros have the extension
 @file{.xlist} .  An example would be the file
-@file{include/YAROS/global.xlist.h} that synchronizes the files
-@file{include/YAROS/global.h} and @file{kernel/global.c} .
+@file{include/kernel/global.xlist.h} that synchronizes the files
+@file{include/kernel/global.h} and @file{kernel/global.c} .
 
 @node Task
 @section Definition of a Task
@@ -219,7 +219,7 @@ properties that you should consider when developing a task. Its
 priority, its nice value and its stack size.
 
 @node Priority
-@section Task's Priority
+@subsection Task's Priority
 @cindex Task's Priority
 A task's priority range between 0 and 7 inclusive. The lower the value
 is, the higher is the priority.  As for now, the priority only
@@ -227,7 +227,7 @@ dictated the order of the task in the running queue.  This behavior
 might change in the future.
 
 @node Niceness
-@section Task's Niceness
+@subsection Task's Niceness
 @cindex Task's Niceness
 A task's nice value range between 0 and 15 inclusive. It determines how
 much CPU time his allocated for the task before rescheduling.  We said
@@ -237,7 +237,7 @@ task.  On the opposite, a task that is not nice, @i{i.e}. with a low
 value of nice, will run longer.
 
 @node Stack
-@section Task's Stack Size
+@subsection Task's Stack Size
 @cindex Task's Stack Size
 The stack size is probably the most important value to
 evaluate.  Underestimate the value and you might overflow and corrupt
@@ -406,9 +406,6 @@ how mutexes work.
 
 @section Global Variales
 @include jiffies.texi
-@deftypevr {Global} jiffy_t jiffies
-Smallest unit of time
-@end deftypevr
 
 
 @section Configuration

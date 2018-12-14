@@ -7,9 +7,8 @@
   YAROS as now its own manual.
 
   You can read the manual of YAROS on GitHub [[https://lzrdkng.github.io/YAROS-manual/][here]].  You can also
-  compile the manual yourself in *info*, *html* or *pdf* formats.
-
-  *ps* and *dvi* formats are not supported yet.
+  compile the manual yourself in *info*, *html* or *pdf*, *dvi*, *ps*,
+  formats.
 
   To compile the manual, use *make format*.  This will compile the
   manual under *build/format/YAROS.format*, where *format* is the file
