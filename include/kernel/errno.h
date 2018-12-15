@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ERRNO_H
-#define ERRNO_H
+#ifndef YAROS_ERRNO_H
+#define YAROS_ERRNO_H
 
 typedef enum {
   OK = 0,
@@ -29,4 +29,4 @@ typedef enum {
   ESLEEP,                       /*< Task is sleeping */
 } error_t;
 
-#endif /* ERRNO_H */
+#endif /* YAROS_ERRNO_H */

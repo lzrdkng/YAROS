@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SLEEP_H
-#define SLEEP_H
+#ifndef YAROS_SUSPEND_H
+#define YAROS_SUSPEND_H
 
 #include "kernel/def.h"
 
@@ -48,4 +48,4 @@ _suspend(struct task *task);
  */
 NON_NULL() void
 resume(struct task *task);
-#endif /* SLEEP_H */
+#endif /* YAROS_SUSPEND_H */

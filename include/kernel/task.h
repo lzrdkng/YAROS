@@ -16,8 +16,8 @@
  */
 
 
-#ifndef TASK_H
-#define TASK_H
+#ifndef YAROS_TASK_H
+#define YAROS_TASK_H
 
 #include "kernel/errno.h"
 #include "kernel/def.h"
@@ -197,4 +197,4 @@ kill_task(struct task *task);
     init_task(TASK, FUNC, DATA);                \
     resume(TASK);                               \
   })
-#endif /* TASK_H */
+#endif /* YAROS_TASK_H */

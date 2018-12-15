@@ -16,8 +16,8 @@
  */
 
 
-#ifndef GLOBAL_H
-#define GLOBAL_H
+#ifndef YAROS_GLOBAL_H
+#define YAROS_GLOBAL_H
 
 #include "kernel/def.h"
 #include "util/dlist.h"
@@ -26,4 +26,4 @@
 #define X(VAR, ...) extern VAR ;
 #include "kernel/global.xlist.h"
 
-#endif /* GLOBAL_H */
+#endif /* YAROS_GLOBAL_H */

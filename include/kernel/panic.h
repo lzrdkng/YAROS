@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PANIC_H
-#define PANIC_H
+#ifndef YAROS_PANIC_H
+#define YAROS_PANIC_H
 
 #include "kernel/def.h"
 
 NO_RETURN void
 kpanic();
-#endif /* PANIC_H */
+#endif /* YAROS_PANIC_H */

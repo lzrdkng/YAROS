@@ -13,8 +13,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DEF_H
-#define DEF_H
+#ifndef YAROS_DEF_H
+#define YAROS_DEF_H
 
 /* Standard */
 #include <assert.h>
@@ -46,4 +46,4 @@
 #define OS_TASK __attribute__((OS_task))
 #define UNUSED __attribute__((unused))
 #define OPTIMIZE(O) __attribute__((optimize( O )))
-#endif /* DEF_H */
+#endif /* YAROS_DEF_H */

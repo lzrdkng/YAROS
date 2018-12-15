@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TYPE_H
-#define TYPE_H
+#ifndef YAROS_TYPE_H
+#define YAROS_TYPE_H
 
 #include <stdint.h>
 
@@ -52,4 +52,4 @@ typedef void (*taskfunc) (void *);
 #define true 1
 typedef unsigned char bool;
 
-#endif /* TYPE_H */
+#endif /* YAROS_TYPE_H */

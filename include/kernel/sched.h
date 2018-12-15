@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SCHED_H
-#define SCHED_H
+#ifndef YAROS_SCHED_H
+#define YAROS_SCHED_H
 
 #include "kernel/def.h"
 #include "kernel/global.h"
@@ -158,4 +158,4 @@ __reset_time_slice(struct task *T)
 {
     time_slice = TASK_MAX_NICE - T->nice;
 }
-#endif /* SCHED_H */
+#endif /* YAROS_SCHED_H */

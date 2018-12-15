@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SYSCLK_H
-#define SYSCLK_H
+#ifndef YAROS_SYSCLK_H
+#define YAROS_SYSCLK_H
 
 #include <util/atomic.h>
 #include <util/delay.h>
@@ -90,4 +90,4 @@ wait(jiffy_t delay)
     reschedule();
 }
 
-#endif /* SYSCLK_H */
+#endif /* YAROS_SYSCLK_H */
