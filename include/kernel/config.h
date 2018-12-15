@@ -13,8 +13,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef YAROS_CONFIG_H
+#define YAROS_CONFIG_H
 
 /*
  * Include kconfig ONCE.
@@ -34,8 +34,8 @@
 /*
  * Frequency at which the TIMER0_OVF_vect interrupt should be call.
  */
-#ifdef CONFIG_HZ
-#  define HZ CONFIG_HZ
+#ifdef YAROS_CONFIG_HZ
+#  define HZ YAROS_CONFIG_HZ
 #else
 #  define HZ 100
 #endif
@@ -56,16 +56,16 @@
 #  define MAX_STACK_SIZE 216
 #endif /* STACK_SIZE_TYPE */
 
-#ifdef CONFIG_F_CPU
-#  define F_CPU CONFIG_F_CPU
+#ifndef CONFIG_F_CPU
+#  error "CONFIG_F_CPU: YAROS need to know your CPU frequency."
 #else
-#  define F_CPU 8000000UL
+#  define F_CPU CONFIG_F_CPU
 #endif /* F_CPU */
 
 #ifdef CONFIG_VERBOSE_LEVEL
 #  define VERBOSE_LEVEL CONFIG_VERBOSE_LEVEL
 #else
-#  define VERBOSE_LEVEL 5
-#endif	/* VERBOSE_LEVEL */
+#  define KERNEL_VERBOSE_LEVEL 5
+#endif	/* KERNEL_VERBOSE_LEVEL */
 
-#endif /* CONFIG_H */
+#endif /* YAROS_CONFIG_H */

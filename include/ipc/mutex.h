@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IPC_H
-#define IPC_H
+#ifndef YAROS_MUTEX_H
+#define YAROS_MUTEX_H
 
 #include "kernel/sched.h"
 
@@ -72,4 +72,4 @@ unlock(volatile struct mutex *mutex, U8 bit)
 	}
 }
 
-#endif /* IPC_H */
+#endif /* YAROS_MUTEX_H */

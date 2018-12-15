@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef EEPROM_H
-#define EEPROM_H
+#ifndef YAROS_EEPROM_H
+#define YAROS_EEPROM_H
 
 #include "kernel/def.h"
 
@@ -32,4 +32,4 @@ kinit_eeprom(void);
 ssize_t
 write_eeprom(int minor, const void *buff, size_t len);
 
-#endif /* EEPROM_H */
+#endif /* YAROS_EEPROM_H */

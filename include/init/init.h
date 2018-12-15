@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INIT_H
-#define INIT_H
+#ifndef YAROS_INIT_H
+#define YAROS_INIT_H
 
 struct task;
 
@@ -25,4 +25,4 @@ kinit();
 
 void
 krun();
-#endif /* INIT_H */
+#endif /* YAROS_INIT_H */

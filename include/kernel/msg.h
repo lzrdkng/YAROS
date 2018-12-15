@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MSG_H
-#define MSG_H
+#ifndef YAROS_MSG_H
+#define YAROS_MSG_H
 
 #include <avr/pgmspace.h>
 #include <string.h>
@@ -61,7 +61,7 @@
 
 #define MSG_FMT(STR) __FILE__ ":" xstr(__LINE__) ":" STR
 
-extern const char NL[] PROGMEM;
+  extern const char NL[] PROGMEM;
 extern void __send_debug_header();
 extern void __send_info_header();
 extern void __send_warning_header();
@@ -72,79 +72,79 @@ extern void __send_nl();
 #if VERBOSE_LEVEL >= 5
 
 #undef DEBUG
-#define DEBUG(STR) \
-	({			   \
-          static const char __DEBUG_STR__[] PROGMEM = MSG_FMT(STR);     \
-	char __debug_buff__[1];									\
-	__send_debug_header();												\
-	for (U16 __debug_i__=0; __debug_i__<sizeof(__DEBUG_STR__); ++__debug_i__) { \
-	memcpy_P(__debug_buff__, &__DEBUG_STR__[__debug_i__], 1);				\
-	write_usart(0, __debug_buff__, 1); \
-	} \
-	__send_nl();								\
-	})
+#define DEBUG(STR)                                                      \
+  ({                                                                    \
+    static const char __DEBUG_STR__[] PROGMEM = MSG_FMT(STR);           \
+    char __debug_buff__[1];                                             \
+    __send_debug_header();                                              \
+    for (U16 __debug_i__=0; __debug_i__<sizeof(__DEBUG_STR__); ++__debug_i__) { \
+      memcpy_P(__debug_buff__, &__DEBUG_STR__[__debug_i__], 1);         \
+      write_usart(0, __debug_buff__, 1);                                \
+    }                                                                   \
+    __send_nl();                                                        \
+  })
 #endif
 
 #if VERBOSE_LEVEL >= 4
 #undef INFO
-#define INFO(STR) \
-	({			   \
-	static const char __INFO_STR__[] PROGMEM = MSG_FMT(STR); \
-	char __info_buff__[1];									\
-	__send_info_header();												\
-	for (U16 __info_i__=0; __info_i__<sizeof(__INFO_STR__); ++__info_i__) { \
-	memcpy_P(__info_buff__, &__INFO_STR__[__info_i__], 1);				\
-	write_usart(0, __info_buff__, 1); \
-	} \
-	__send_nl();								\
-	})
+#define INFO(STR)                                                       \
+  ({                                                                    \
+    static const char __INFO_STR__[] PROGMEM = MSG_FMT(STR);            \
+    char __info_buff__[1];                                              \
+    __send_info_header();                                               \
+    for (U16 __info_i__=0; __info_i__<sizeof(__INFO_STR__); ++__info_i__) { \
+      memcpy_P(__info_buff__, &__INFO_STR__[__info_i__], 1);            \
+      write_usart(0, __info_buff__, 1);                                 \
+    }                                                                   \
+    __send_nl();                                                        \
+  })
 #endif
 
 
 #if VERBOSE_LEVEL >= 3
 #undef WARNING
-#define WARNING(STR) \
-	({			   \
-	static const char __WARNING_STR__[] PROGMEM =  MSG_FMT(STR);     \
-	char __warning_buff__[1];									\
-	__send_warning_header();											\
-	for (U16 __warning_i__=0; __warning_i__<sizeof(__WARNING_STR__); ++__warning_i__) { \
-	memcpy_P(__warning_buff__, &__WARNING_STR__[__warning_i__], 1);				\
-	write_usart(0, __warning_buff__, 1); \
-	} \
-	__send_nl();								\
-	})
+#define WARNING(STR)                                                    \
+  ({                                                                    \
+    static const char __WARNING_STR__[] PROGMEM =  MSG_FMT(STR);        \
+    char __warning_buff__[1];                                           \
+    __send_warning_header();                                            \
+    for (U16 __warning_i__=0; __warning_i__<sizeof(__WARNING_STR__); ++__warning_i__) { \
+      memcpy_P(__warning_buff__, &__WARNING_STR__[__warning_i__], 1);   \
+      write_usart(0, __warning_buff__, 1);                              \
+    }                                                                   \
+    __send_nl();                                                        \
+  })
 #endif
 
 #if VERBOSE_LEVEL >= 2
 #undef ERROR
-#define ERROR(STR) \
-	({			   \
-	static const char __ERROR_STR__[] PROGMEM =  MSG_FMT(STR);     \
-	char __error_buff__[1];									\
-	__send_error_header();												\
-	for (U16 __error_i__=0; __error_i__<sizeof(__ERROR_STR__); ++__error_i__) { \
-	memcpy_P(__error_buff__, &__ERROR_STR__[__error_i__], 1);				\
-	write_usart(0, __error_buff__, 1); \
-	} \
-	__send_nl(); \
-	})
+#define ERROR(STR)                                                      \
+  ({                                                                    \
+    static const char __ERROR_STR__[] PROGMEM =  MSG_FMT(STR);          \
+    char __error_buff__[1];                                             \
+    __send_error_header();                                              \
+    for (U16 __error_i__=0; __error_i__<sizeof(__ERROR_STR__); ++__error_i__) { \
+      memcpy_P(__error_buff__, &__ERROR_STR__[__error_i__], 1);         \
+      write_usart(0, __error_buff__, 1);                                \
+    }                                                                   \
+    __send_nl();                                                        \
+  })
 #endif
 
 
 #if VERBOSE_LEVEL >= 1
 #undef FATAL
-#define FATAL(STR) \
-	({			   \
-	static const char __FATAL_STR__[] PROGMEM = MSG_FMT(STR);     \
-	char __fatal_buff__[1];									\
-	__send_fatal_header();												\
-	for (U16 __fatal_i__=0; __fatal_i__<sizeof(__FATAL_STR__); ++__fatal_i__) { \
-	memcpy_P(__fatal_buff__, &__FATAL_STR__[__fatal_i__], 1);				\
-	write_usart(0, __fatal_buff__, 1); \
-	} \
-	__send_nl(); \
-	})
+#define FATAL(STR)                                                      \
+  ({                                                                    \
+    static const char __FATAL_STR__[] PROGMEM = MSG_FMT(STR);           \
+    char __fatal_buff__[1];                                             \
+    __send_fatal_header();                                              \
+    for (U16 __fatal_i__=0; __fatal_i__<sizeof(__FATAL_STR__); ++__fatal_i__) { \
+      memcpy_P(__fatal_buff__, &__FATAL_STR__[__fatal_i__], 1);         \
+      write_usart(0, __fatal_buff__, 1);                                \
+    }                                                                   \
+    __send_nl();                                                        \
+  })
 #endif
 
-#endif /* MSG_H */
+#endif /* YAROS_MSG_H */

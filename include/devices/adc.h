@@ -17,8 +17,8 @@
 
 
 
-#ifndef ADC_H
-#define ADC_H
+#ifndef YAROS_ADC_H
+#define YAROS_ADC_H
 
 #include "kernel/def.h"
 
@@ -67,4 +67,4 @@ fini_adc(void);
  **/
 error_t
 read_adc(adc_mux mux, void *buff);
-#endif /* ADC_H */
+#endif /* YAROS_ADC_H */

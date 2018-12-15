@@ -16,8 +16,8 @@
  */
 
 
-#ifndef TWI_H
-#define TWI_H
+#ifndef YAROS_TWI_H
+#define YAROS_TWI_H
 
 #include "kernel/def.h"
 #include "kernel/errno.h"
@@ -61,4 +61,4 @@ write_twi(sla_t sla_w, const void *buff, size_t count);
 */
 
 
-#endif /* TWI_H */
+#endif /* YAROS_TWI_H */

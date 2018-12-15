@@ -17,7 +17,7 @@
 
 #include "kernel/msg.h"
 
-#if VERBOSE_LEVEL >= 5
+#if KERNEL_VERBOSE_LEVEL >= 5
 const char DEBUG_HEADER[] PROGMEM = GREEN("[DEBUG] ");
 
 void
@@ -33,7 +33,7 @@ __send_debug_header()
 }
 #endif
 
-#if VERBOSE_LEVEL >= 4
+#if KERNEL_VERBOSE_LEVEL >= 4
 const char INFO_HEADER[] PROGMEM = PURPLE("[INFO] ");
 
 void
@@ -50,7 +50,7 @@ __send_info_header()
 #endif
 
 
-#if VERBOSE_LEVEL >= 3
+#if KERNEL_VERBOSE_LEVEL >= 3
 const char WARNING_HEADER[] PROGMEM = YELLOW("[WARNING] ");
 
 void
@@ -67,7 +67,7 @@ __send_warning_header()
 #endif
 
 
-#if VERBOSE_LEVEL >= 2
+#if KERNEL_VERBOSE_LEVEL >= 2
 const char ERROR_HEADER[] PROGMEM = RED("[ERROR] ");
 
 void
@@ -83,7 +83,7 @@ __send_error_header()
 }
 #endif
 
-#if VERBOSE_LEVEL >= 1
+#if KERNEL_VERBOSE_LEVEL >= 1
 const char FATAL_HEADER[] PROGMEM = LIGHT_RED("[FATAL] ");
 const char NL[] PROGMEM = {'\n'};
 

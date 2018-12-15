@@ -69,13 +69,13 @@
             write_usart(0, foo_str, sizeof(foo_str));
 
             /* Resume bar */
-            resume(bar_task);
+            resume(&bar);
 
             /* Wait 1 second */
             wait(HZ);
 
             /* Suspend bar */
-            suspend(bar_task);
+            suspend(&bar);
         }
     }
 

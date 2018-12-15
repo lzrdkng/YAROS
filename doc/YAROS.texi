@@ -364,13 +364,13 @@ These functions give you control over the tasks and the scheduler
             write_usart(0, foo_str, @kwd{sizeof}(foo_str));
 
             @com{/* Resume bar */}
-            resume(bar_task);
+            resume(&bar);
 
             @com{/* Wait 1 second */}
             wait(HZ);
 
             @com{/* Suspend bar */}
-            suspend(bar_task);
+            suspend(&bar);
         @}
     @}
 

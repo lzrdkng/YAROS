@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IRQ_H
-#define IRQ_H
+#ifndef YAROS_IRQ_H
+#define YAROS_IRQ_H
 
 #include "kernel/def.h"
 #include "kernel/errno.h"
@@ -38,4 +38,4 @@ enable_irq(irq_t irq);
 
 error_t
 enable_irq_unsafe(irq_t irq);
-#endif /* IRQ_H */
+#endif /* YAROS_IRQ_H */

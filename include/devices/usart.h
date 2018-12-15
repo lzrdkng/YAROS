@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USART_H
-#define USART_H
+#ifndef YAROS_USART_H
+#define YAROS_USART_H
 
 #include "kernel/def.h"
 
@@ -34,4 +34,4 @@ write_usart(int minor, const void *buff, size_t len);
 
 ssize_t
 read_usart(int minor, void *buff, size_t len);
-#endif /* USART_H */
+#endif /* YAROS_USART_H */

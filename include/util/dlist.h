@@ -21,8 +21,8 @@
  *
  * @sa "linux/include/linux/list.h"
  */
-#ifndef _URBAN_DLIST_H
-#define _URBAN_DLIST_H
+#ifndef YAROS_DLIST_H
+#define YAROS_DLIST_H
 
 
 #define offsetof(st, m) \
@@ -276,4 +276,4 @@ dlist_splice_tail(struct dlist *dlist,
 	     &pos->member != (head); 					\
 	     pos = n, n = dlist_prev_entry(n, member))
 
-#endif // _URBAN_DLIST_H
+#endif /* YAROS_DLIST_H */

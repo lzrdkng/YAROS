@@ -16,8 +16,8 @@
  */
 
 
-#ifndef CLOCK_H
-#define CLOCK_H
+#ifndef YAROS_CLK_H
+#define YAROS_CLK_H
 
 #include "kernel/def.h"
 
@@ -61,4 +61,4 @@ read_clk(clk_t clk, void *buff);
 
 error_t
 write_clk(clk_t clk, const void *buff);
-#endif /* CLOCK_H */
+#endif /* YAROS_CLK_H */
