@@ -1,9 +1,9 @@
 /*
- * Copyright (C) Olivier Dion <olivier.dion@polymtl.ca>
+ * Copyright (C) 2018 Olivier Dion <olivier.dion@polymtl.ca>
  *
- * This program is free software: you can redistribute it and/or modify
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -15,47 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "drivers/usart/atmega324pa.h"
 
-/*
- * USART driver for the atmega324pa
- */
-
-#include <avr/io.h>
-
-#include "kernel/msg.h"
-
-#include "devices/usart.h"
-
-
-static inline void __attribute__((always_inline))
-__enable_reception()
-{
-    UCSR0B |= _BV(RXEN0);
-}
-
-static inline void __attribute__((always_inline))
-__disable_reception()
-{
-    UCSR0B &= ~_BV(RXEN0);
-}
-
-static inline void __attribute__((always_inline))
-__wait_for_send()
-{
-    while (!(UCSR0A & _BV(UDRE0)))
-        ;
-}
-
-static inline void __attribute__((always_inline))
-__wait_for_recv()
-{
-    while (!(UCSR0A & _BV(RXC0)))
-        ;
-}
-
-
-void
-init_usart(void)
+error_t
+init_usart(int device)
 {
     UBRR0H = 0x0;
     UBRR0L = 0xCF;
@@ -67,12 +30,14 @@ init_usart(void)
 
     /* 8 bits no parity; stop is 1 bit */
     (void)UCSR0C;
+
+    return OK;
 }
 
 
 
 ssize_t
-write_usart(int minor, const void *buff, size_t len)
+write_usart(int device, const void *buff, size_t len)
 {
     for (size_t i=0; i < len; ++i) {
         __wait_for_send();
@@ -84,7 +49,7 @@ write_usart(int minor, const void *buff, size_t len)
 
 
 ssize_t
-read_usart(int minor, void *buff, size_t len)
+read_usart(int device, void *buff, size_t len)
 {
     for (size_t i=0;  i<len; ++i) {
         __wait_for_recv();
@@ -92,4 +57,11 @@ read_usart(int minor, void *buff, size_t len)
     }
 
     return len;
+}
+
+
+error_t
+fini_usart(int device)
+{
+  return -ENOTSUP;
 }

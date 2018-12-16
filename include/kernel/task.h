@@ -53,7 +53,7 @@
    .priority = PRIO,                                                    \
    .nice = NICE,                                                        \
    .size = SIZE + MIN_STACK_SIZE,                                       \
-   .stack[0 ... (SIZE + MIN_STACK_SIZE - 1)] = 0                  r      \
+   .stack[0 ... (SIZE + MIN_STACK_SIZE - 1)] = 0                        \
   };                                                                    \
   static_assert( PRIO < TASK_MAX_PRIORITY, "Priority value is too big."); \
   static_assert( NICE < TASK_MAX_NICE, "Nice value is too big.");       \

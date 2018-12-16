@@ -1,9 +1,9 @@
 /*
- * Copyright (C) Olivier Dion <olivier.dion@polymtl.ca>
+ * Copyright (C) 2018 Olivier Dion <olivier.dion@polymtl.ca>
  *
- * This program is free software: you can redistribute it and/or modify
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -15,26 +15,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef YAROS_USART_H
-#define YAROS_USART_H
+#include "kernel/config.h"
+#include "kernel/msg.h"
+#include "devices/usart.h"
 
-#include "kernel/def.h"
 
 #if defined(__AVR_ATmega324PA__)
-#  include "drivers/usart/atmega324pa.h"
+
+#  include "drivers/usart/atmega324pa.c"
+
 #else
+
 # warning "USART not supported!"
+
+error_t
+init_usart(int device)
+{
+  return -ENOTSUP;
+}
+
+ssize_t
+write_usart(int device, const void *buff, size_t len)
+{
+  return -ENOTSUP;
+}
+
+
+ssize_t
+read_usart(int device, void *buff, size_t len)
+{
+  return -ENOTSUP;
+}
+
+
+error_t
+fini_usart(int device)
+{
+  return -ENOTSUP;
+}
 #endif
-
-error_t
-init_usart(int device);
-
-ssize_t
-write_usart(int device, const void *buff, size_t len);
-
-ssize_t
-read_usart(int device, void *buff, size_t len);
-
-error_t
-fini_usart(int device);
-#endif /* YAROS_USART_H */

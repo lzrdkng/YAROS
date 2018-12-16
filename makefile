@@ -102,9 +102,6 @@ srcdir?=
 MCU = atmega324pa
 ARCH = atmega
 
-# Device's Driver
-DD = $(MCU)
-
 # Target Archive
 PACKAGE=YAROS
 VERSION=0.1.0
@@ -119,11 +116,6 @@ INC_DIR = include
 BUILD_DIR = build
 CONF_DIR = scripts
 
-# =============================================
-# vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-# REPLACE THIS SECTION WITH SOMETHING MORE ROBUST
-# MCU Device's Drivers
-#SRC =$(shell for dd in $(DD) ; do find . -iname *$$dd*.$(SRC_EXT); done)
 
 # Add Kernel Source File
 SRC = $(shell find $(SRC_PATH) -iname *.$(SRC_EXT))
@@ -134,18 +126,14 @@ OBJ = $(addprefix $(BUILD_DIR)/,$(SRC:%.$(SRC_EXT)=%.$(OBJ_EXT)))
 
 VPATH = \
 arch/$(ARCH): \
-drivers/adc: \
-drivers/clk: \
-drivers/irq: \
-drivers/twi: \
-drivers/usart: \
+devices: \
 kernel: \
 init: \
 ipc
 
 SRC_PATH = \
 arch \
-drivers \
+devices \
 kernel \
 init \
 ipc
@@ -165,7 +153,7 @@ DEP_EXT = d
 INC := $(shell find  $(INC_DIR)/ -iname "*.$(INC_EXT)" -type f)
 
 # Preprocessor
-CPPFLAGS = -I$(INC_DIR) -MMD
+CPPFLAGS = -I$(INC_DIR) -MMD -DVERBOSE_LEVEL=5
 
 # Compiler
 CC := avr-gcc
