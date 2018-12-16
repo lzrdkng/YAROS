@@ -7,10 +7,10 @@ main(int argc, char *argv[])
 
   init_usart(0);
 
-  write_usart(0, str, sizeof(str));
+  asm volatile ("sei" ::: "memory");
 
   while (1)
-    ;
+      write_usart(0, str, sizeof(str));
 
   return 0;
 }
