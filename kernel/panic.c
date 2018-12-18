@@ -66,7 +66,7 @@ __kpanic()
 }
 
 void
-kpanic()
+_kpanic()
 {
     cli();
 
@@ -87,5 +87,3 @@ kpanic()
     while (1)
         ;
 }
-
-

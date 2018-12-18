@@ -1,4 +1,3 @@
-
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -13,6 +12,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Olivier Dion <olivier.dion@polymtl.ca>
+
+include target.autogen.in
+include package.autogen.in
 
 SHELL=/bin/sh
 
@@ -82,30 +84,29 @@ lispdir?=$(datarootdir)/emacs/site-lisp
 localedir?=$(datarootdir)/locale
 
 # Top-level directory for installing man pages
-mandir?=$(datarootdir)/man
+#mandir?=$(datarootdir)/man
 
 # Directory for installing section 1
-man1dir=$(mandir)/man1
+#man1dir=$(mandir)/man1
 
 # Section 2
-man2dir=$(mandir)/man2
+#man2dir=$(mandir)/man2
 
-manext?=.
-man1ext=$(manext)1
-man2ext=$(manext)2
+#manext?=.
+#man1ext=$(manext)1
+#man2ext=$(manext)2
 
 # Directory for the sources being compiled
-srcdir?=
-
+#srcdir?=
 
 # microcontroller
 MCU = atmega324pa
 ARCH = atmega
 
 # Target Archive
-PACKAGE=YAROS
-VERSION=0.1.0
-TARGET_NAME=lib$(PACKAGE)
+PACKAGE?=YAROS
+
+TARGET_NAME=lib$(PACKAGE)-$(PACKAGE_VERSION)
 TARGET = $(TARGET_DIR)/$(TARGET_NAME).a
 TARGET_NAME_STRIPPED=$(TARGET_NAME)-stripped
 TARGET_STRIPPED = $(TARGET_DIR)/$(TARGET_NAME_STRIPPED).a
@@ -119,10 +120,7 @@ CONF_DIR = scripts
 
 # Add Kernel Source File
 SRC = $(shell find $(SRC_PATH) -iname *.$(SRC_EXT))
-
 OBJ = $(addprefix $(BUILD_DIR)/,$(SRC:%.$(SRC_EXT)=%.$(OBJ_EXT)))
-# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# =============================================
 
 VPATH = \
 arch/$(ARCH): \
@@ -132,13 +130,13 @@ init: \
 ipc
 
 SRC_PATH = \
-arch \
-devices \
-kernel \
-init \
-ipc
+arch/$(ARCH)/ \
+devices/ \
+kernel/ \
+init/ \
+ipc/
 
-BUILD_PATH = $(dir $(OBJ))
+BUILD_PATH = $(addprefix $(BUILD_DIR)/, $(SRC_PATH))
 BUILD_PATH += build/info/ build/html/ build/dvi/ build/pdf/ build/ps/
 
 DIRECTORIES = $(BUILD_DIR) $(TARGET_DIR) $(BUILD_PATH)
@@ -197,8 +195,7 @@ AVR_OPTS :=  \
 CODE := \
 -fpack-struct
 
-PROF := \
--fstack-usage
+PROF :=
 
 _CFLAGS :=  \
 $(DIALECT) \
@@ -212,14 +209,15 @@ $(PROF)
 
 # Linker
 AC = avr-ar
+# We only link to avrlibC
 LIBS :=
-LDFLAGS :=
+ARFLAGS := rcs
 
 # Utils
 RM := rm -rf
 
 # To clean
-CLEANER :=
+CLEANER := $(shell find . -iname "*autogen*" -type f) ./config.status ./target.def
 CLEAN := $(TARGET_DIR)/ $(BUILD_DIR)/ $(INC_DIR)/kconfig.h
 
 INSTALL_PROGRAM=$(INSTALL)
@@ -230,33 +228,42 @@ INSTALL_DATA=${INSTALL} -m 644
 all: $(DIRECTORIES) $(TARGET)
 
 clean:
-	@echo "CLEAN $(CLEAN)"
-	@$(RM) $(CLEAN)
+	@for item in $(CLEAN); do \
+	if [ -f $$item ] || [ -d $$item ] ; then \
+		echo "CLEAN $$item" ; \
+		$(RM) $$item ; \
+	fi \
+	done
 
 cleaner: clean
-	@echo "CLEAN $(CLEANER)"
-	@$(RM) $(CLEANER)
+	@for item in $(CLEANER); do \
+	if [ -f $$item ] || [ -d $$item ]; then \
+		echo "CLEAN $$item" ; \
+		$(RM) $$item ; \
+	fi \
+	done
 
 
 config:	$(INC_DIR)/kconfig.h
+	autogen -L templates templates/package.def
 
 dist:
-	@mkdir $(PACKAGE)-$(VERSION)
-	@cp -r arch $(PACKAGE)-$(VERSION)
-	@cp -r drivers $(PACKAGE)-$(VERSION)
-	@cp -r include $(PACKAGE)-$(VERSION)
-	@cp -r init $(PACKAGE)-$(VERSION)
-	@cp -r ipc $(PACKAGE)-$(VERSION)
-	@cp -r kernel $(PACKAGE)-$(VERSION)
-	@cp -r scripts $(PACKAGE)-$(VERSION)
-	@cp -r tests $(PACKAGE)-$(VERSION)
-	@cp AUTHORS $(PACKAGE)-$(VERSION)
-	@cp LICENSE $(PACKAGE)-$(VERSION)
-	@cp makefile $(PACKAGE)-$(VERSION)
-	@cp README.org $(PACKAGE)-$(VERSION)
-	@tar -zcf $(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)-$(VERSION)
-	@rm -rf $(PACKAGE)-$(VERSION)
-	@echo DIST $(PACKAGE)-$(VERSION).tar.gz
+	@mkdir $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp -r arch $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp -r drivers $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp -r include $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp -r init $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp -r ipc $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp -r kernel $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp -r scripts $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp -r tests $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp AUTHORS $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp LICENSE $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp makefile $(PACKAGE)-$(PACKAGE_VERSION)
+	@cp README.org $(PACKAGE)-$(PACKAGE_VERSION)
+	@tar -zcf $(PACKAGE)-$(PACKAGE_VERSION).tar.gz $(PACKAGE)-$(PACKAGE_VERSION)
+	@rm -rf $(PACKAGE)-$(PACKAGE_VERSION)
+	@echo DIST $(PACKAGE)-$(PACKAGE_VERSION).tar.gz
 
 
 install:
@@ -311,10 +318,8 @@ build/pdf/YAROS.pdf: doc/YAROS.texi
 build/ps/YAROS.ps: doc/YAROS.texi
 	@cd build/ps && $(MAKEINFO) --ps ../../$<
 
-
-tests:
+tests: $(TARGET)
 	@make -C tests
-
 
 .PHONY: \
 all \
@@ -322,6 +327,11 @@ clean \
 cleaner \
 config \
 dist \
+pdf \
+ps \
+dvi \
+html \
+info \
 install \
 uninstall \
 tests
@@ -340,7 +350,7 @@ $(TARGET_DIR):
 
 $(TARGET): $(INC_DIR)/kconfig.h $(OBJ)
 	@echo "LD $(subst $(TARGET_DIR)/,,$@)"
-	@$(AR) rcs $@ $^
+	@$(AR) $(ARFLAGS) $@ $^
 
 $(TARGET_STRIPPED): $(TARGET)
 	@echo "STRIP $< -> $@"
@@ -354,3 +364,8 @@ $(INC_DIR)/kconfig.h:
 $(BUILD_DIR)/%.$(OBJ_EXT): %.$(SRC_EXT)
 	@echo "CC $(subst $(BUILD_DIR)/,,$@)"
 	@$(CC) $(CPPFLAGS) $(_CFLAGS) $(CFLAGS) -c $< -o $@
+
+# Autogen
+%.autogen:
+	@echo "Please execute ./configure before using the makefile"
+	@exit 1

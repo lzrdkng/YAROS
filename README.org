@@ -26,9 +26,12 @@
 
   *make info* will compile the manual under *build/info/YAROS.info*.
 
+* Dependencies
+  YAROS use *AVR Libc* and was designed to be used with *GCC*.  Other
+  compilers will *not* be supported.
 * Example
   #+BEGIN_SRC C
-    #include "YAROS.h"
+    #include <YAROS/YAROS.h>
 
     /* foo has priority level 0, nice value of 5 and a stack of 50 bytes */
     struct task foo = TASK(TASK_P0, TASK_N5, 50);

@@ -21,5 +21,8 @@
 #include "kernel/def.h"
 
 NO_RETURN void
-kpanic();
+_kpanic();
+
+#define kpanic() _kpanic();
+
 #endif /* YAROS_PANIC_H */

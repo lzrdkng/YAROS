@@ -3,7 +3,8 @@
 @setfilename YAROS.info
 @documentencoding UTF-8
 @documentlanguage en
-@settitle Using YAROS Version 0.1.0
+@include package.autogen.texi
+@settitle Using YAROS Version @value{VERSION}
 @setchapternewpage odd
 
 @finalout
@@ -198,9 +199,9 @@ Cons
 @end itemize
 
 As you can see, the only pros for using C++ is template for better
-meta-programming.  The cons outweigh the pros and therefore, only C
-shall be use for YAROS.  Maybe in the future C++ written like C will
-be used, nothing is cast into stone.
+meta-programming.  The cons outweigh the pros, in my opinion, and
+therefore, only C shall be use for YAROS.  Maybe in the future C++
+written like C will be used, nothing is cast into stone.
 
 @node Xlist
 @section Xlist
@@ -410,7 +411,7 @@ how mutexes work.
 
 @section Configuration
 @defvr {Config Option} CONFIG_JIFFY
-foo foo foo
+
 @end defvr
 
 
@@ -422,7 +423,7 @@ foo foo foo
 
 @item Round-Robin Policy
 @anchor{round-robin}
-foo
+
 
 @item RTOS
 A RTOS is a real-time operating system.  It must be able to meet soft

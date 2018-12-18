@@ -1,1 +1,141 @@
 #!/bin/sh
+
+function print_usage {
+    echo "Usage: configure [OPTIONS] --mcu=<mcu> --arch=<arch>"
+    echo "Options List:"
+    echo "  --prefix="
+    echo "  --exec-prefix="
+    echo "  --bindir="
+    echo "  --sbindir="
+    echo "  --libexecdir="
+    echo "  --sysconfdir="
+    echo "  --sharedstatedir="
+    echo "  --localstatedir="
+    echo "  --runstatedir="
+    echo "  --libdir="
+    echo "  --includedir="
+    echo "  --oldincludedir="
+    echo "  --datarootdir="
+    echo "  --datadir="
+    echo "  --infodir="
+    echo "  --localedir="
+    echo "  --mandir="
+    echo "  --docdir="
+    echo "  --htmldir="
+    echo "  --dvidir="
+    echo "  --pdfdir="
+    echo "  --psdir="
+}
+
+function generate_config_status {
+    rm -f config.status
+}
+
+function generate_package_info {
+    autogen -L autogen/tpl autogen/def/package.def
+}
+
+function generate_target_info {
+    rm -f target.def
+    echo "autogen definitions target;" >> target.def
+    echo "MCU=$mcu;" >> target.def
+    echo "ARCH=$arch;" >> target.def
+    autogen -L autogen/tpl target.def
+}
+
+GREEN=`tput setaf 2`
+YELLOW=`tput setaf 3`
+BOLD=`tput bold`
+NC=`tput sgr0`
+
+CHECK_PROGRAMS=(
+    autogen
+    avr-ar
+    avr-gcc
+    avr-strip
+    find
+    make
+    makeinfo
+    python3
+)
+
+for arg in "$@"
+do
+    case $arg in
+        --prefix=*)
+            prefix="${arg#*=}" ;;
+        --exec-prefix=*)
+            exec_prefix="${arg#*=}" ;;
+        --bindir=*)
+            bindir="${arg#*=}" ;;
+        --sbindir=*)
+            sbindir="${arg#*=}" ;;
+        --libexecdir=*)
+            libexecdir="${arg#*=}" ;;
+        --sysconfdir=*)
+            sysconfdir="${arg#*=}" ;;
+        --sharedstatedir=*)
+            sharedstatedir="${arg#*=}" ;;
+        --localstatedir=*)
+            localstatedir="${arg#*=}" ;;
+        --runstatedir=*)
+            runstatedir="${arg#*=}" ;;
+        --libdir=*)
+            libdir="${arg#*=}" ;;
+        --includedir=*)
+            includedir="${arg#*=}" ;;
+        --oldincludedir=*)
+            oldincludedir="${arg#*=}" ;;
+        --datarootdir=*)
+            datarootdir="${arg#*=}" ;;
+        --datadir=*)
+            datadir="${arg#*=}" ;;
+        --infodir=*)
+            infodir="${arg#*=}" ;;
+        --localedir=*)
+            localedir="${arg#*=}" ;;
+        --mandir=*)
+            mandir="${arg#*=}" ;;
+        --docdir=*)
+            docdir="${arg#*=}" ;;
+        --htmldir=*)
+            htmldir="${arg#*=}" ;;
+        --dvidir=*)
+            dvidir="${arg#*=}" ;;
+        --pdfdir=*)
+            pdfdir="${arg#*=}" ;;
+        --psdir=*)
+            psdir="${arg#*=}" ;;
+        --mcu=*)
+            mcu="${arg#*=}" ;;
+        --arch=*)
+            arch="${arg#*=}" ;;
+    esac
+done
+
+if [ -z "$mcu" ] || [ -z "$arch" ];
+then
+    print_usage
+    exit 1
+fi
+
+echo -e "<Checking for programs>\n"
+
+for program in ${CHECK_PROGRAMS[*]}
+do
+    type $program >/dev/null 2>&1
+    if [ $? -ne 0 ]
+    then
+        echo -e "${YELLOW}[NO]${NC}${BOLD}" $program ${NC}
+    else
+        echo -e "${GREEN}[OK]${NC}${BOLD}" $program ${NC}
+    fi
+done
+
+echo -e "\n<Generating ${BOLD}config.status${NC}>"
+
+generate_config_status
+
+echo -e "\nGenerating package infos"
+generate_package_info
+generate_target_info

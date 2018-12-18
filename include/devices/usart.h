@@ -20,14 +20,19 @@
 
 #include "kernel/def.h"
 
-#if defined(__AVR_ATmega324PA__)
+#if defined(__AVR_ATmega164A__) || defined(__AVR_ATmega164PA__) || defined(__AVR_ATmega324A__) || defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega644A__) || defined(__AVR_ATmega644PA__) || defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
 #  include "drivers/usart/atmega324pa.h"
 #else
 # warning "USART not supported!"
 #endif
 
-error_t
-init_usart(int device);
+
+
+/**
+ * Initialize
+ */
+ssize_t
+init_usart(int device, ssize_t baud_rate);
 
 ssize_t
 write_usart(int device, const void *buff, size_t len);

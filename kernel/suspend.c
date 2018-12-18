@@ -20,11 +20,12 @@
 #include "kernel/sched.h"
 #include "kernel/suspend.h"
 #include "kernel/task.h"
+#include "kernel/panic.h"
 
 #include <util/atomic.h>
 
 NON_NULL() void
-  __suspend_task(struct task *T)
+__suspend_task(struct task *T)
 {
   T->running = TASK_SLEEP;
 
@@ -32,7 +33,7 @@ NON_NULL() void
 }
 
 OS_MAIN OPTIMIZE("s") void
-  __suspend_self()
+__suspend_self()
 {
   __suspend_task((struct task*)current_task);
 
@@ -108,3 +109,7 @@ resume(struct task *T)
 
     }
 }
+
+/* Local Variables: */
+/* c-file-style: "gnu" */
+/* End: */

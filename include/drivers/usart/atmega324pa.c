@@ -17,8 +17,8 @@
 
 #include "drivers/usart/atmega324pa.h"
 
-error_t
-init_usart(int device)
+ssize_t
+init_usart(int device, ssize_t baud_rate)
 {
     UBRR0H = 0x0;
     UBRR0L = 0xCF;
@@ -65,3 +65,5 @@ fini_usart(int device)
 {
   return -ENOTSUP;
 }
+
+/* style: gnu */
