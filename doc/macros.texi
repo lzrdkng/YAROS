@@ -64,8 +64,8 @@
 
 @end macro
 
+@c https://github.com/google/code-prettify/blob/master/src/prettify.css 
 @tex
-@c https://github.com/google/code-prettify/blob/master/src/prettify.css
 \gdef\str#1{\pdfliteral{0 0.5333 0 rg}#1\pdfliteral{0 0 0 rg}}
 \gdef\kwd#1{\pdfliteral{0 0 0.5333 rg}#1\pdfliteral{0 0 0 rg}}
 \gdef\com#1{\pdfliteral{0.5333 0 0 rg}#1\pdfliteral{0 0 0 rg}}
