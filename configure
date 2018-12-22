@@ -27,22 +27,6 @@ function print_usage {
     echo "  --psdir="
 }
 
-function generate_config_status {
-    rm -f config.status
-}
-
-function generate_package_info {
-    autogen -L autogen/tpl autogen/def/package.def
-}
-
-function generate_target_info {
-    rm -f target.def
-    echo "autogen definitions target;" >> target.def
-    echo "MCU=$mcu;" >> target.def
-    echo "ARCH=$arch;" >> target.def
-    autogen -L autogen/tpl target.def
-}
-
 GREEN=`tput setaf 2`
 YELLOW=`tput setaf 3`
 BOLD=`tput bold`
@@ -108,12 +92,16 @@ do
             psdir="${arg#*=}" ;;
         --mcu=*)
             mcu="${arg#*=}" ;;
-        --arch=*)
-            arch="${arg#*=}" ;;
     esac
 done
 
-if [ -z "$mcu" ] || [ -z "$arch" ];
+if [ ! -f makefile ];
+then
+    echo "AUTOGEN makefile"
+    autogen -D${mcu} -DMCU=${mcu} -T autogen/tpl/makefile.tpl autogen/def/makefile.def
+fi
+
+if [ -z "$mcu" ];
 then
     print_usage
     exit 1
@@ -131,11 +119,3 @@ do
         echo -e "${GREEN}[OK]${NC}${BOLD}" $program ${NC}
     fi
 done
-
-echo -e "\n<Generating ${BOLD}config.status${NC}>"
-
-generate_config_status
-
-echo -e "\nGenerating package infos"
-generate_package_info
-generate_target_info

@@ -260,12 +260,12 @@ ISR(KCLK_vect, ISR_NAKED)
  * frequency.
  */
 void
-kinit_sysclk(void)
+init_sysclk(void)
 {
     if (init_clk(KCLK,
                  CLK_NORMAL,
                  KCLK_SRC,
                  0) != OK) {
-        FATAL("kinit_sysclk");
+        FATAL("init_sysclk");
     }
 }

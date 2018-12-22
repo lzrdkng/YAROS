@@ -20,12 +20,6 @@
 
 #include "kernel/def.h"
 
-#if defined(__AVR_ATmega324PA__)
-#  include "drivers/eeprom/eeprom_atmega324pa.h"
-#else
-#  error "Architecture not supported!"
-#endif
-
 void
 kinit_eeprom(void);
 

@@ -21,7 +21,6 @@
 
 #include "kernel/errno.h"
 #include "kernel/def.h"
-#include "kernel/suspend.h"
 
 #include "util/dlist.h"
 
@@ -163,10 +162,9 @@ struct task {
  *
  * @return A pointer to the task.
  */
-NON_NULL(1,2) struct task*
-init_task(struct task *task,
-          taskfunc func,
-          void *data);
+NON_NULL(1,2) struct task* init_task(struct task *task,
+                                     taskfunc func,
+                                     void *data);
 
 /**
  * @brief kill the current task.
@@ -175,8 +173,7 @@ init_task(struct task *task,
  * called, the task will never run until it's initialized and wake up
  * again.
  */
-void
-kill_self(void);
+void kill_self(void);
 
 /**
  * @brief kill a specific task.
@@ -186,15 +183,36 @@ kill_self(void);
  *
  * @task The task to kill
  */
-NO_OPTIMIZE void
-kill_task(struct task *task);
+NO_OPTIMIZE void kill_task(struct task *task);
 
 /**
  * @brief Initialize and wake up a task.
  */
 #define run_task(TASK, FUNC, DATA)              \
-  ({                                            \
+  do {                                          \
     init_task(TASK, FUNC, DATA);                \
     resume(TASK);                               \
-  })
+  } while (0)
+
+
+/**
+ * @brief Put a task in the sleeping queue
+ *
+ * @task The task to put the in the sleeping queue, or NULL for the
+ * current task.
+ *
+ * @note Putting the current task in sleep will reschedule to the next
+ * task.
+ */
+void suspend_task(struct task *task);
+
+/**
+ * @brief Wake up an initialized task.
+ *
+ * Move the task from the sleeping queue to the running queue.
+ *
+ * @param T The task to wake up.
+ */
+NON_NULL() void resume_task(struct task *task);
+
 #endif /* YAROS_TASK_H */

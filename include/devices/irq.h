@@ -21,21 +21,49 @@
 #include "kernel/def.h"
 #include "kernel/errno.h"
 
-#if defined(__AVR_ATmega324PA__)
-#  include "drivers/irq/irq_atmega324pa.h"
-#else
-#  error "Architecture not supported!"
-#endif
+enum irq {
+     IRQ_RESET = 0x00,
+     IRQ_INT0,
+     IRQ_INT1,
+     IRQ_INT2,
+     IRQ_PCINT0,
+     IRQ_PCINT1,
+     IRQ_PCINT2,
+     IRQ_PCINT3,
+     IRQ_WDT,
+     IRQ_TIMER2_COMPA,
+     IRQ_TIMER2_COMPB,
+     IRQ_TIMER2_OVF,
+     IRQ_TIMER1_CAPT,
+     IRQ_TIMER1_COMPA,
+     IRQ_TIMER1_COMPB,
+     IRQ_TIMER1_OVF,
+     IRQ_TIMER0_COMPA,
+     IRQ_TIMER0_COMPB,
+     IRQ_TIMER0_OVF,
+     IRQ_SPI_STC,
+     IRQ_USART0_RX,
+     IRQ_USART0_UDRE,
+     IRQ_USART0_TX,
+     IRQ_ANALOG_COMP,
+     IRQ_ADC,
+     IRQ_EE_READY,
+     IRQ_TWI,
+     IRQ_SPM_READY,
+     IRQ_USART1_RX,
+     IRQ_USART1_UDRE,
+     IRQ_USART1_TX
+};
 
 error_t
-disable_irq(irq_t irq);
+disable_irq(int irq);
 
 error_t
-disable_irq_unsafe(irq_t irq);
+disable_irq_unsafe(int irq);
 
 error_t
-enable_irq(irq_t irq);
+enable_irq(int irq);
 
 error_t
-enable_irq_unsafe(irq_t irq);
+enable_irq_unsafe(int irq);
 #endif /* YAROS_IRQ_H */

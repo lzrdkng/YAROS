@@ -1,10 +1,9 @@
-
 /*
- * Copyright (C) Olivier Dion <olivier.dion@polymtl.ca>
+ * Copyright (C) 2018 Olivier Dion <olivier.dion@polymtl.ca>
  *
- * This program is free software: you can redistribute it and/or modify
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -26,24 +25,6 @@
 #include "init/init.h"
 
 #include "util/dlist.h"
-
-/*
- * Extern init functions
- */
-#undef X
-#define X(NAME) extern void NAME (void);
-#include "init.list"
-
-void
-kinit()
-{
-    /*
-     * Call to init functions.
-     */
-#undef X
-#define X(NAME) NAME ();
-#include "init.list"
-}
 
 void
 krun()

@@ -40,50 +40,50 @@ prepare_stack(struct task *T,
               taskfunc func,
               void *data)
 {
-    /*
-     * The stack of the task is now:
-     *
-     * The *data* parameter is put in the stack at position
-     * R25-R24. This is because of the calling convention of
-     * avr-gcc.
-     *
-     * See: https://gcc.gnu.org/wiki/avr-gcc#Calling_Convention
-     *
-     * Top: Low Address
-     * |       0        | : offset = 0
-     * |       .        |
-     * |       .        |
-     * |       .        |
-     * |       .        | <-- Stack Pointer of the Task : offset = size - 38
-     * |       .        | <-- Saved SREG
-     * |       .        | <-- [R31-R26]
-     * |    hi8(data)   | <-- R25 : offset = size - 30
-     * |    lo8(data)   | <-- R24
-     * |       .        | <-- [R23-R0]
-     * |    hi8(func)   | <-- Entry Point : offset = size - 4
-     * |    lo8(func)   |
-     * | hi8(kill_self) | <-- Return To Caller : offset =  size - 2
-     * | lo8(kill_self) |
-     * Bottom: High Address
-     */
+     /*
+      * The stack of the task is now:
+      *
+      * The *data* parameter is put in the stack at position
+      * R25-R24. This is because of the calling convention of
+      * avr-gcc.
+      *
+      * See: https://gcc.gnu.org/wiki/avr-gcc#Calling_Convention
+      *
+      * Top: Low Address
+      * |       0        | : offset = 0
+      * |       .        |
+      * |       .        |
+      * |       .        |
+      * |       .        | <-- Stack Pointer of the Task : offset = size - 38
+      * |       .        | <-- Saved SREG
+      * |       .        | <-- [R31-R26]
+      * |    hi8(data)   | <-- R25 : offset = size - 30
+      * |    lo8(data)   | <-- R24
+      * |       .        | <-- [R23-R0]
+      * |    hi8(func)   | <-- Entry Point : offset = size - 4
+      * |    lo8(func)   |
+      * | hi8(kill_self) | <-- Return To Caller : offset =  size - 2
+      * | lo8(kill_self) |
+      * Bottom: High Address
+      */
 
-    /* lo8(kill_self) */
-    T->stack[T->size - 1] = (U8)(((U16)kill_self) & 0xFF);
+     /* lo8(kill_self) */
+     T->stack[T->size - 1] = (U8)(((U16)kill_self) & 0xFF);
 
-    /* hi8(kill_self) */
-    T->stack[T->size - 2] = (U8)(((U16)kill_self) >> 8);
+     /* hi8(kill_self) */
+     T->stack[T->size - 2] = (U8)(((U16)kill_self) >> 8);
 
-    /* lo8(func) */
-    T->stack[T->size - 3] = (U8)(((U16)func) & 0xFF);
+     /* lo8(func) */
+     T->stack[T->size - 3] = (U8)(((U16)func) & 0xFF);
 
-    /* hi8(func) */
-    T->stack[T->size - 4] = (U8)(((U16)func) >> 8);
+     /* hi8(func) */
+     T->stack[T->size - 4] = (U8)(((U16)func) >> 8);
 
-    /* lo8(data) */
-    T->stack[T->size - 29] = (U8)(((U16)data) & 0xFF);
+     /* lo8(data) */
+     T->stack[T->size - 29] = (U8)(((U16)data) & 0xFF);
 
-    /* hi8(data) */
-    T->stack[T->size - 30] = (U8)(((U16)data) >> 8);
+     /* hi8(data) */
+     T->stack[T->size - 30] = (U8)(((U16)data) >> 8);
 }
 
 
@@ -95,10 +95,10 @@ prepare_stack(struct task *T,
  * @param T The task to free.
  */
 static inline NON_NULL()  void
-__free_task(struct task *T)
+     __free_task(struct task *T)
 {
-    T->running = TASK_SLEEP;
-    dlist_del(&(T->self));
+     T->running = TASK_SLEEP;
+     dlist_del(&(T->self));
 }
 
 
@@ -107,83 +107,161 @@ init_task(struct task *T,
           taskfunc func,
           void *data)
 {
-    /*
-     * Initialize the linked list.
-     */
-    INIT_DLIST(&T->self);
+     /*
+      * Initialize the linked list.
+      */
+     INIT_DLIST(&T->self);
 
-    /*
-     * Clear the stack
-     */
-    memset(T->stack,
-           0x00,
-           T->size);
+     /*
+      * Clear the stack
+      */
+     memset(T->stack,
+            0x00,
+            T->size);
 
-    /*
-     * Push kill_self and func on the task's stack.
-     */
-    prepare_stack(T, func, data);
+     /*
+      * Push kill_self and func on the task's stack.
+      */
+     prepare_stack(T, func, data);
 
-    /*
-     * Move the stack pointer on top of what was pushed + registers
-     * and SREG.
-     */
-    T->stack_pointer = (U16*)(T->stack + T->size - 38);
+     /*
+      * Move the stack pointer on top of what was pushed + registers
+      * and SREG.
+      */
+     T->stack_pointer = (U16*)(T->stack + T->size - 38);
 
-    /*
-     * Put the task to sleep
-     */
-    suspend(T);
+     /*
+      * Put the task to sleep
+      */
+     suspend_task(T);
 
-    return T;
+     return T;
 }
 
 void
 kill_self(void)
 {
-    /*
-     * Entering Atomic operation.
-     */
-    asm volatile("cli" ::: "memory");
+     /*
+      * Entering Atomic operation.
+      */
+     asm volatile("cli" ::: "memory");
 
-    /*
-     * We remove ourself from any list.
-     */
-    __free_task((struct task*)current_task);
+     /*
+      * We remove ourself from any list.
+      */
+     __free_task((struct task*)current_task);
 
-    current_task = running_queue.next;
+     current_task = running_queue.next;
 
-    if (current_task == &running_queue) {
-        /* No more task; End of time */
-        kpanic();
-    }
+     if (current_task == &running_queue) {
+          /* No more task; End of time */
+          kpanic();
+     }
 
-    stack_pointer = ((struct task*)current_task)->stack_pointer;
+     stack_pointer = ((struct task*)current_task)->stack_pointer;
 
-    RESTORE_SP;
+     RESTORE_SP;
 
-    /*
-     * Restore the context
-     */
-    RESTORE_STACK;
+     /*
+      * Restore the context
+      */
+     RESTORE_STACK;
 
-    /*
-     * End of Atomic operation. Return to the scheduled task.
-     */
-    asm volatile("reti" ::: "memory");
+     /*
+      * End of Atomic operation. Return to the scheduled task.
+      */
+     asm volatile("reti" ::: "memory");
 }
 
 void
 kill_task(struct task *T)
 {
-    /*
-     * Entering Atomic operation.
-     */
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+     /*
+      * Entering Atomic operation.
+      */
+     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
 
-        if (&T->self == current_task || T == NULL)
-            kill_self();
+          if (&T->self == current_task || T == NULL)
+               kill_self();
 
-        __free_task(T);
-    }
+          __free_task(T);
+     }
+}
+
+NON_NULL() void
+__suspend_task(struct task *T)
+{
+     T->running = TASK_SLEEP;
+
+     dlist_move(&T->self, &sleeping_queue);
+}
+
+OS_MAIN OPTIMIZE("s") void
+__suspend_self()
+{
+     __suspend_task((struct task*)current_task);
+
+     /* Save Context before switch */
+     SAVE_STACK;
+     SAVE_SP;
+     ((struct task*)current_task)->stack_pointer = stack_pointer;
+
+     /* Switching context */
+     if (&running_queue == running_queue.next)
+          kpanic();
+
+     current_task = running_queue.next;
+     stack_pointer = ((struct task*)current_task)->stack_pointer;
+
+     RESTORE_SP;
+     RESTORE_STACK;
+
+     asm volatile ("reti" ::: "memory");
+}
+
+void
+suspend_task(struct task *T)
+{
+     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+
+          if (&T->self == current_task || T == NULL)
+               __suspend_self();
+          else
+               __suspend_task(T);
+     }
+}
+
+
+void
+resume_task(struct task *T)
+{
+     if (!IS_SLEEPING(T))
+          return;
+
+     /*
+      * Remove task from the sleeping queue, change its status and put
+      * it in the running queue.
+      */
+     T->running = TASK_RUN;
+
+     /*
+      * Block context switch briefly
+      */
+     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+
+          struct task *pos;
+
+          if (dlist_is_empty(&running_queue)) {
+               dlist_move_tail(&T->self, &running_queue);
+          }
+          else {
+               dlist_for_each_entry(pos, &running_queue, self) {
+
+                    if (pos->priority >= T->priority) {
+                         dlist_move_tail(&T->self, &pos->self);
+                         break;
+                    }
+               }
+          }
+     }
 }

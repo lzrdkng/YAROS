@@ -3,19 +3,17 @@
 @setfilename YAROS.info
 @documentencoding UTF-8
 @documentlanguage en
-@include package.autogen.texi
 @settitle Using YAROS Version @value{VERSION}
 @setchapternewpage odd
 
 @finalout
-
 
 @include macros.texi
 
 @c %**end of header
 
 @copying
-This manual is for using YAROS, version 0.1.0 .
+This manual is for using YAROS, version @value{VERSION}
 
 Copyright @copyright{} 2018 Olivier Dion
 

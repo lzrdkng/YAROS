@@ -22,11 +22,12 @@
 #include "kernel/def.h"
 #include "kernel/errno.h"
 
-#if defined(__AVR_ATmega324PA__)
-#  include "drivers/twi/twi_atmega324pa.h"
-#else
-# error "Architecture not supported!"
-#endif
+enum twi_mode {
+	TWI_MT, 					/*< Master Transmitter */
+	TWI_MR,						/*< Master Receiver */
+	TWI_ST,						/*< Slave Transmitter */
+	TWI_SR						/*< Slave Receiver */
+};
 
 error_t
 init_twi(int device);
@@ -35,10 +36,10 @@ error_t
 fini_twi(int device);
 
 error_t
-read_twi(sla_t sla_r, void *buff, size_t count);
+read_twi(int sla_r, void *buff, size_t count);
 
 error_t
-write_twi(sla_t sla_w, const void *buff, size_t count);
+write_twi(int sla_w, const void *buff, size_t count);
 
 
 /*

@@ -2,10 +2,10 @@
   - [-] Stack Poison 
   - [-] Develop tests
   - [-] Better configuration script
-  - [-] Better device driver selection
+  - [X] Better device driver selection
   - [-] Memory manager
   - [-] File System 
-  - [-] Better source code layout 
+  - [X] Better source code layout 
   - [-] Soft Real-time scheduling
   - [-] C++ Compatible
   - [-] Test on different MCU
@@ -16,8 +16,8 @@
   *ATmega324PA*. I plan to port it to different MCU and different avr
   families.
 
-** Supported MCU for Scheduling
-*** megaAVR Family [9/35]
+** Supported MCU
+*** megaAVR Family [1/35]
     
     - [-] 8
     - [-] 8l
@@ -34,15 +34,15 @@
     - [-] 128L
     - [-] 128rtfa1
     - [-] 128rfr2
-    - [X] 164
-    - [X] 164A 
-    - [X] 164PA
+    - [-] 164
+    - [-] 164A 
+    - [-] 164PA
     - [-] 168
     - [-] 168P
     - [-] 168PA
-    - [X] 324
-    - [X] 324P
-    - [X] 324A
+    - [-] 324
+    - [-] 324P
+    - [-] 324A
     - [X] 324PA
     - [-] 328
     - [-] 328p
@@ -51,6 +51,6 @@
     - [-] 644PA
     - [-] 1280
     - [-] 1281
-    - [X] 1284
-    - [X] 1284P
+    - [-] 1284
+    - [-] 1284P
     - [-] 2560

@@ -15,36 +15,75 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kernel/config.h"
-#include "kernel/msg.h"
 #include "devices/usart.h"
 
-
-#if defined(__AVR_ATmega324PA__)
-
-#  include "drivers/usart/atmega324pa.c"
-
-#else
-
-# warning "USART not supported!"
-
-error_t
-init_usart(int device)
+INLINE void
+__enable_reception()
 {
-  return -ENOTSUP;
+    UCSR0B |= _BV(RXEN0);
 }
+
+INLINE void
+__disable_reception()
+{
+    UCSR0B &= ~_BV(RXEN0);
+}
+
+INLINE void
+__wait_for_send()
+{
+    while (!(UCSR0A & _BV(UDRE0)))
+        ;
+}
+
+INLINE void
+__wait_for_recv()
+{
+    while (!(UCSR0A & _BV(RXC0)))
+        ;
+}
+
+
+ssize_t
+init_usart(int device, ssize_t baud_rate)
+{
+    UBRR0H = 0x0;
+    UBRR0L = 0xCF;
+
+    (void)UCSR0A;
+
+    /* Receiver and Transmitter */
+    UCSR0B = _BV(RXEN0) | _BV(TXEN0);
+
+    /* 8 bits no parity; stop is 1 bit */
+    (void)UCSR0C;
+
+    return OK;
+}
+
+
 
 ssize_t
 write_usart(int device, const void *buff, size_t len)
 {
-  return -ENOTSUP;
+    for (size_t i=0; i < len; ++i) {
+        __wait_for_send();
+        UDR0 = ((char*)buff)[i];
+    }
+
+    return len;
 }
 
 
 ssize_t
 read_usart(int device, void *buff, size_t len)
 {
-  return -ENOTSUP;
+    for (size_t i=0;  i<len; ++i) {
+        __wait_for_recv();
+        ((char*)buff)[i] = UDR0;
+    }
+
+    return len;
 }
 
 
@@ -53,4 +92,5 @@ fini_usart(int device)
 {
   return -ENOTSUP;
 }
-#endif
+
+/* style: gnu */

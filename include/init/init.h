@@ -18,11 +18,7 @@
 #ifndef YAROS_INIT_H
 #define YAROS_INIT_H
 
-struct task;
+void init_kernel();
 
-void
-kinit();
-
-void
-krun();
+void run_kernel();
 #endif /* YAROS_INIT_H */

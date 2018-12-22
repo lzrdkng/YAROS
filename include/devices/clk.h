@@ -21,44 +21,76 @@
 
 #include "kernel/def.h"
 
-#if defined (__AVR_ATmega324PA__)
-#  include "drivers/clk/clk_atmega324pa.h"
-#endif
+enum clk_type {
+	CLK_0,
+	CLK_1,
+	CLK_2,
+	CLK_TYPE_MAX
+};
+
+enum clk_mode {
+	CLK_NORMAL = 0b0000,
+	CLK_CTC,					/* CTC with OCRnA compare */
+	CLK_CTCI, 					/* CTC with ICRn Compare (Input Capture) */
+	CLK_PWM,					/* Fast PWM */
+	CLK_PWMA,					/* Fast PWM with OCRnA Compare */
+	CLK_PWMI,					/* Fast PWM with IRCRn Compare (Input Capture) */
+	CLK_PWM8,					/* Fast PWM, 8-bit */
+	CLK_PWM9,					/* Fast PWM, 9-bit */
+	CLK_PWM10,					/* Fast PWM, 10-bit */
+	CLK_PWMP,					/* Phase Correct PWM */
+	CLK_PWMPA,					/* Phase Correct PWM with OCRnA Compare */
+	CLK_PWMPI,					/* Phase Correct PWM with ICRn Compare (Input Capture) */
+	CLK_PWMP8,					/* Phase Correct PWM, 8-bit */
+	CLK_PWMP9,					/* Phase Correct PWM, 9-bit */
+	CLK_PWMP10,					/* Phase Correct PWM, 10-bits*/
+	CLK_PWMPF,					/* Phase & Frequency Correct PWM */
+	CLK_PWMPFA,					/* Phase & Frequency Correct PWM with OCRnA Compare */
+	CLK_PWMPFI					/* Phase & Frequency Correct PWM with ICRn Compare */
+};
+
+enum clk_src {
+	CLK_STOP,
+	CLK_P1,						/* CPU from prescalers 1 to 1024 */
+	CLK_P8,
+	CLK_P32,
+	CLK_P64,
+	CLK_P128,
+	CLK_P256,
+	CLK_P1024,
+	CLK_EXTF,					/* External source falling */
+	CLK_EXTR					/* External source rising */
+};
 
 
-error_t
-init_clk(clk_t clk,
-		 clk_m mode,
-		 clk_s src,
-		 clk_o out);
+enum {
+	/* Non PWM mode */
+	CLK_DB = 0x00,	   /*< Normal port operation, OCnB disconnected */
+	CLK_TB = 0x10,	   /*< Toggle OCnB on Compare Match */
+	CLK_CB = 0x20,	   /*< Clear OCnB on Compare Match */
+	CLK_SB = 0x30,	   /*< Set OCnB on Compare Match */
+	CLK_DA = 0x00,	   /*< Normal port operation, OCnA disconnected */
+	CLK_TA = 0x40,	   /*< Toggle OCnA on Compare Match */
+	CLK_CA = 0x80,	   /*< Clear OCnA on Compare Match */
+	CLK_SA = 0xC0	   /*< Set OCnA on Compare Match */
+};
 
-error_t
-fini_clk(clk_t clk);
 
-error_t
-clk_mode(clk_t clk,
-		 clk_m mode);
+error_t init_clk(int clk, int mode, int src, int out);
 
-error_t
-clk_src(clk_t clk,
-		clk_s src);
+error_t fini_clk(int clk);
 
-error_t
-clk_out(clk_t clk,
-		clk_o out);
+error_t clk_mode(int clk, int mode);
 
-clk_m
-get_clk_mode(clk_t clk);
+error_t clk_src(int clk, int src);
 
-clk_s
-get_clk_src(clk_t clk);
+error_t clk_out(int clk, int out);
 
-clk_o
-get_clk_out(clk_t clk);
+int get_clk_mode(int clk);
+int get_clk_src(int clk);
+int get_clk_out(int clk);
 
-error_t
-read_clk(clk_t clk, void *buff);
+error_t read_clk(int clk, void *buff);
 
-error_t
-write_clk(clk_t clk, const void *buff);
+error_t write_clk(int clk, const void *buff);
 #endif /* YAROS_CLK_H */

@@ -20,6 +20,11 @@
 
 #include "devices/clk.h"
 
+typedef int clk_m;
+typedef int clk_s;
+typedef int clk_o;
+typedef int clk_t;
+
 
 /* CLOCK 0 */
 

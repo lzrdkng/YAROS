@@ -23,6 +23,8 @@
 #include "kernel/type.h"
 #include "kernel/errno.h"
 
+#include <avr/io.h>
+
 #define xstr(s) str(s)
 #define str(s) #s
 

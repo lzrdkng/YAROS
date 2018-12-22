@@ -15,10 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <avr/io.h>
-
 #include "devices/irq.h"
 
+typedef int irq_t;
 
 #if 0
 void

@@ -5,7 +5,7 @@ main(int argc, char *argv[])
 {
   static const char str[] = "Hello World!";
 
-  init_usart(0);
+  init_usart(0, 2048);
 
   asm volatile ("sei" ::: "memory");
 

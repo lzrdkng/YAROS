@@ -109,7 +109,7 @@ $(PROF)
 
 
 # Linker
-LIBS := -lYAROS
+LIBS := -lYAROS-atmega324pa-1.0.0
 LDFLAGS :=  -L../lib -Wl,-Map,$(TARGET).map -mmcu=$(MCU)
 
 

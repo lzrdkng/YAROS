@@ -166,9 +166,9 @@ dlist_is_last(const struct dlist *dlist,
 
 
 static inline char __attribute__((always_inline))
-dlist_is_empty(const struct dlist *head)
+dlist_is_empty(const struct dlist *dlist)
 {
-  return head == head->next;
+  return dlist == dlist->next;
 }
 
 
