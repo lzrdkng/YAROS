@@ -1,0 +1,8 @@
+autogen definitions init;
+
+init =
+{
+     retval="void";
+     name="init_sysclk";
+     params="";
+};

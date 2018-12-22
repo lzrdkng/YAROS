@@ -1,0 +1,42 @@
+autogen definitions global;
+
+variables =
+  {
+   name  = "volatile jiffy_t jiffies";
+   value = "(jiffy_t)(-3 * HZ)";
+  };
+
+variables =
+  {
+   name  = "volatile U8 time_slice";
+   value = 0;
+  };
+
+variables =
+  {
+   name  = "struct dlist sleeping_queue";
+   value = "DLIST_INIT(sleeping_queue)";
+  };
+
+variables =
+  {
+   name  = "struct dlist running_queue";
+   value = "DLIST_INIT(running_queue)";
+  };
+
+variables =
+  {
+   name  = "struct dlist * volatile current_task";
+   value = "NULL";
+  };
+
+variables =
+  {
+   name  = "U16 * volatile stack_pointer";
+   value = "NULL";
+  };
+
+
+/* Local Variables: */
+/* mode: c */
+/* End: */

@@ -1,7 +1,6 @@
 *.o
 *.d
 *.a
-*autogen*
 build
 lib
 GPATH
