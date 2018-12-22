@@ -49,7 +49,7 @@
     main(int argc, char *argv[])
     {
         /* Initialize the Kernel */
-        kinit();
+        init_kernel();
 
         /* Foo is scheduled */
         run_task(&foo,
@@ -61,7 +61,7 @@
                   do_bar,
                   NULL);
 
-        krun();
+        run_kernel();
     }
 
 
@@ -76,13 +76,13 @@
             write_usart(0, foo_str, sizeof(foo_str));
 
             /* Resume bar */
-            resume(&bar);
+            resume_task(&bar);
 
             /* Wait 1 second */
             wait(HZ);
 
             /* Suspend bar */
-            suspend(&bar);
+            suspend_task(&bar);
         }
     }
 
