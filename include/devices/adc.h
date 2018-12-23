@@ -141,16 +141,12 @@ enum adc_mux {
  *
  * @note Possible value of errno are ENOTSUP.
  */
-error_t
-init_adc(int mode,
-         int scale,
-         int vref);
+error_t init_adc(int mode, int scale, int vref);
 
 /**
  * @brief Restore default state of the ADC.
  */
-void
-fini_adc(void);
+void fini_adc(void);
 
 
 /**
@@ -161,7 +157,6 @@ fini_adc(void);
  * @param buff The buffer to write the result to.
  *
  * @return OK on success, a negative errno on error.
- **/
-error_t
-read_adc(int mux, void *buff);
+ */
+error_t read_adc(int mux, void *buff);
 #endif /* YAROS_ADC_H */

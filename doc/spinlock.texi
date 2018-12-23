@@ -1,0 +1,10 @@
+@deftypefn {} void spinlock @
+  (volatile struct mutex *mutex, U8 key)
+@sp 1
+Loop until the mutex pointed by @code{mutex} with key @code{key} is
+acquired.
+@sp 1
+@warning{}
+Those type of lock are not recursive!  To avoid deadlock,
+always release them before locking them again in the same task.
+@end deftypefn

@@ -258,19 +258,21 @@ MAKEINFO = texi2any -D "VERSION $(PACKAGE_VERSION)"
 MAKEDVI  = texi2dvi --command="@set VERSION $(PACKAGE_VERSION)"
 MAKEPDF  = texi2pdf --command="@set VERSION $(PACKAGE_VERSION)" --command="@set tex-pdf"
 
-build/info/YAROS.info: doc/YAROS.texi
+TEXINFO_DOCUMENTS=$(wildcard doc/*.texi)
+
+build/info/YAROS.info: $(TEXINFO_DOCUMENTS)
 	@cd build/info && $(MAKEINFO) --info ../../$<
 
-build/html/YAROS.html: doc/YAROS.texi doc/style.css
+build/html/YAROS.html: $(TEXINFO_DOCUMENTS) doc/style.css doc/script.js
 	@cd build/html && $(MAKEINFO) --no-split --html --css-include=../../doc/style.css ../../$<
 
-build/dvi/YAROS.dvi: doc/YAROS.texi
+build/dvi/YAROS.dvi: $(TEXINFO_DOCUMENTS)
 	@cd build/dvi && $(MAKEDVI) ../../$<
 
-build/pdf/YAROS.pdf: doc/YAROS.texi
+build/pdf/YAROS.pdf: $(TEXINFO_DOCUMENTS)
 	@cd build/pdf && $(MAKEPDF) ../../$<
 
-build/ps/YAROS.ps: doc/YAROS.texi
+build/ps/YAROS.ps: $(TEXINFO_DOCUMENTS)
 	@cd build/ps && $(MAKEINFO) --ps ../../$<
 
 tests: $(TARGET)

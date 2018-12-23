@@ -1,4 +1,4 @@
-@deftypefn {} {struct task*} init_task @
+@deftypefn {} void init_task @
   (struct task *@code{task}, taskfunc @code{func}, void *@code{data})
 @sp 1
 Initialize the task pointed by @code{task} with function entry point

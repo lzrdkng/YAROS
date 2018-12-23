@@ -20,8 +20,7 @@
 
 #include "kernel/def.h"
 
-NO_RETURN void
-_kpanic();
+NO_RETURN void _kpanic();
 
 #define kpanic() _kpanic();
 

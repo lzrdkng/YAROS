@@ -45,18 +45,20 @@ Free Documentation License".
 @ifnottex
 
 @node Top
-@top YAROS
+@top YAROS @value{VERSION}
 @insertcopying
 
 @menu
-* Prologue:: What is YAROS
+* Prologue:: What is YAROS.
 
 Introduction sections:
-* Concepts:: The concepts of YAROS
-* Examples:: Few examples
+* Concepts:: The concepts of YAROS.
+* Configuring:: How to configure YAROS.
+* Examples:: Few examples.
 
 Reference sections:
 * Internal:: How YAROS work internally.
+* Extending:: How to add new MCU to YAROS.
 * Glossary:: Glossary.
 * GNU Free Documentation License:: Copying this document.
 * Index of Functions::
@@ -69,12 +71,13 @@ Reference sections:
 The Concepts of YAROS
 
 * C Dialect::  The dialect of the C programming language used for YAROS and why.
-* Xlist::      Usage of X macros in YAROS.
+* Autogen::    Usage of GNU autogen in YAROS.
 * Task::       Definition of a Task.
 * Priority::   What is the priority of a task.
 * Niceness::   What is the niceness of a task.
 * Stack::      Why stack usage is important.
 * Scheduling:: How scheduling is done.
+* Synchronizing:: How the synchronyze tasks.
 
 @end detailmenu
 
@@ -190,32 +193,33 @@ Cons
         The whole C++ standard library and the STL are banned
 
         @item
-        Will only work with C++ code
+        Less portable.
 
 @end itemize
 
 @end itemize
 
 As you can see, the only pros for using C++ is template for better
-meta-programming.  The cons outweigh the pros, in my opinion, and
-therefore, only C shall be use for YAROS.  Maybe in the future C++
-written like C will be used, nothing is cast into stone.
+meta-programming. Using C make it more portable and this is very
+important for YAROS. The cons outweigh the pros, in my opinion, and
+therefore, only C shall be use for YAROS.
 
-@node Xlist
-@section Xlist
-@cindex Xlist
-YAROS makes extensive use of X macros to keep files synchronized.
-Every files that have a list of X macros have the extension
-@file{.xlist} .  An example would be the file
-@file{include/kernel/global.xlist.h} that synchronizes the files
-@file{include/kernel/global.h} and @file{kernel/global.c} .
+@node Autogen
+@section Autogen
+@cindex Autogen
+YAROS makes extensive use of @b{GNU autogen} to keep files
+synchronized.  Most of them are use for developping, therefore you
+don't need to know them.  There's one exeception to this.  To generate
+your kernel configuration, you will need to generate a definition file
+that will be use by autogen to generate the header for your kernel.
+@ref{Configuring}.
 
 @node Task
 @section Definition of a Task
 @cindex Task
 A task in YAROS is what we can refer to as a thread.  There are 3
 properties that you should consider when developing a task. Its
-priority, its nice value and its stack size.
+priority, its niceness and its stack size.
 
 @node Priority
 @subsection Task's Priority
@@ -260,6 +264,20 @@ YAROS is a time-sharing system.  It follows a simple @ref{round-robin} policy
 and is therefore preemptive.  It's athought possible for task to be
 cooperative by forcing scheduling.
 
+Because of the scheduling policy, you should put the task with the
+smallest time slice at the begining of the running queue.
+
+
+@node Synchronizing
+@section Synchronizing Tasks
+@cindex Synchronizing
+To synchronize tasks between them, you will have to use a mutex.
+Mutex in YAROS are a single byte wrap in a structure.  Because you
+only need 1 bit to lock and unlock, every mutex has 8 keys.
+Therefore, every time you want to use a mutex, you will need to
+provide a pointer to the structure and the key that you want to
+acquired/released.
+
 @page
 @section Functions
 This section will describe to you the interface that you can use with
@@ -269,9 +287,9 @@ are composite of regular or atomic function.
 
 @subsection Kernel Control
 These functions manipulate the kernel. 
-@func{kinit}
-@func{kpanic}
-@func{krun}
+@func{init_kernel}
+@func{panic_kernel}
+@func{run_kernel}
 
 @subsection Time Control
 These functions help you with getting the time.
@@ -284,11 +302,24 @@ These functions give you control over the tasks and the scheduler
 @func{kill_self}
 @func{kill_task}
 @func{reschedule}
-@func{resume}
+@func{resume_task}
 @func{run_task}
-@func{suspend}
+@func{suspend_task}
 @func{wait}
 
+@subsection Mutex
+These functions help you synchronize task between them.
+@func{try_lock}
+@func{spinlock}
+@func{unlock}
+
+
+@node Configuring
+@chapter Kernel Configuration
+
+@defvr {Config Option} CONFIG_JIFFY
+
+@end defvr
 
 @node Examples
 @chapter Examples
@@ -327,7 +358,7 @@ These functions give you control over the tasks and the scheduler
     main(@typ{int} argc, @typ{char} *argv[])
     @{
         @com{/* Initialize the Kernel */}
-        kinit();
+        init_kernel();
 
         @com{/* Foo is scheduled */}
         run_task(&foo,
@@ -340,7 +371,7 @@ These functions give you control over the tasks and the scheduler
                   NULL);
 
         @com{/* krun never return */}
-        krun();
+        run_kernel();
     @}
 @end example
 @ifnothtml
@@ -363,13 +394,13 @@ These functions give you control over the tasks and the scheduler
             write_usart(0, foo_str, @kwd{sizeof}(foo_str));
 
             @com{/* Resume bar */}
-            resume(&bar);
+            resume_task(&bar);
 
             @com{/* Wait 1 second */}
             wait(HZ);
 
             @com{/* Suspend bar */}
-            suspend(&bar);
+            suspend_task(&bar);
         @}
     @}
 
@@ -404,14 +435,18 @@ how mutexes work.
 @include struct_task.texi
 
 @section Global Variales
+This section will enumerate all global variables used by YAROS.  All
+global variables are defined in @file{autogen/def/global.def} .  As an
+user you should never try to access those variables directly.
 @include jiffies.texi
+@include time_slice.texi
+@include sleeping_queue.texi
+@include running_queue.texi
+@include current_task.texi
+@include stack_pointer.texi
 
-
-@section Configuration
-@defvr {Config Option} CONFIG_JIFFY
-
-@end defvr
-
+@node Extending
+@chapter Extending YAROS
 
 @node Glossary
 @appendix Glossary
@@ -422,6 +457,10 @@ how mutexes work.
 @item Round-Robin Policy
 @anchor{round-robin}
 
+In a round-robing scheduling policy, every task as a time slice.  When
+this time slice is expired, the task is putted at the tail of the
+queue and the next task is scheduled.
+
 
 @item RTOS
 A RTOS is a real-time operating system.  It must be able to meet soft
@@ -429,11 +468,6 @@ and hard deadline.  @xref{Prologue}.
 
 It has its own context (stack of execution)
 and is independent of other tasks.  Of course just like thread, tasks can be synchronize between them via mutexes or semaphores.  @xref{Task}.
-
-@item Xlist
-A Xlist is a list of terms wrapped in a X macro individually.  Xlist
-are useful to synchronize list of elements between files that use them
-but expand the X macro differently.  @xref{Xlist}.
 
 @item YAROS
 YAROS is a RTOS for embedded system for the AVR

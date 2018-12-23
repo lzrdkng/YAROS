@@ -1,4 +1,4 @@
-@deftypefn {Atomic} void suspend @
+@deftypefn {Atomic} void suspend_task @
   (struct task *@code{task})
 @sp 1
 Put the task pointed by @code{task} in the sleeping queue.  If @code{NULL} is

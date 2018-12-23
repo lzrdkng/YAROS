@@ -1,4 +1,4 @@
-@deftypefn {Atomic} void resume @
+@deftypefn {Atomic} void resume_task @
   (struct task *@code{task})
 @sp 1
 Put the task pointed by @code{task} in the running queue.  If @code{NULL} is

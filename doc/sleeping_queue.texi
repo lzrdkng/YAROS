@@ -1,0 +1,4 @@
+@deftypevr {Global} @kwd{struct} @typ{dlist} sleeping_queue
+Represent the queue of task that are sleeping.
+
+@end deftypevr

@@ -32,6 +32,7 @@
 @ @ @ @ @typ{sstack_t} size;
 
 @ @ @ @ @typ{U8} stack[ ];
+
 @};
 @end ifnothtml
 @sp 1

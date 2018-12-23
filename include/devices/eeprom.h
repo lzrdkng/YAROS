@@ -20,10 +20,12 @@
 
 #include "kernel/def.h"
 
-void
-kinit_eeprom(void);
+error_t init_eeprom(int dev);
 
-ssize_t
-write_eeprom(int minor, const void *buff, size_t len);
+error_t fini_eeprom(int dev);
+
+ssize_t write_eeprom(int dev, const void *buff, size_t len);
+
+ssize_t read_eeprom(int dev, void *buff, size_t len);
 
 #endif /* YAROS_EEPROM_H */

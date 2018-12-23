@@ -1,0 +1,11 @@
+@deftypefn {} void spinlock @
+  (volatile struct mutex *mutex, U8 key)
+@sp 1
+Try to acquire a mutex pointed by @code{mutex} with key @code{key}.
+
+Return @code{OK} on success, @code{-EBUSY} if the mutex is already acquired.
+@sp 1
+
+@warning{}
+This should never be call in a ISR.
+@end deftypefn

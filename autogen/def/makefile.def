@@ -70,12 +70,13 @@ src_files = "kernel/msg.c";
 src_files = "kernel/panic.c";
 src_files = "kernel/sched.c";
 src_files = "kernel/task.c";
+src_files = "kernel/global.c";
 
-build_dirs = "build/drivers/adc/";
-build_dirs = "build/drivers/clk/";
-build_dirs = "build/drivers/irq/";
-build_dirs = "build/drivers/twi/";
-build_dirs = "build/drivers/usart/";
+build_dirs = "build/devices/adc/";
+build_dirs = "build/devices/clk/";
+build_dirs = "build/devices/irq/";
+build_dirs = "build/devices/twi/";
+build_dirs = "build/devices/usart/";
 build_dirs = "build/dvi/";
 build_dirs = "build/html/";
 build_dirs = "build/info/";
@@ -92,11 +93,11 @@ inc_dirs = "include/";
 #ifdef atmega324pa
 build_dirs = "build/arch/atmega/";
 arch       = "arch/atmega/sysclk.c";
-arch       = "drivers/adc/atmega324pa.c";
-arch       = "drivers/clk/atmega324pa.c";
-arch       = "drivers/irq/atmega324pa.c";
-arch       = "drivers/twi/atmega324pa.c";
-arch       = "drivers/usart/atmega324pa.c";
+arch       = "devices/adc/atmega324pa.c";
+arch       = "devices/clk/atmega324pa.c";
+arch       = "devices/irq/atmega324pa.c";
+arch       = "devices/twi/atmega324pa.c";
+arch       = "devices/usart/atmega324pa.c";
 #else
 #error "Architecture not found or not supported!"
 #endif

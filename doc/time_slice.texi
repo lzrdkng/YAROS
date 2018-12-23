@@ -1,0 +1,5 @@
+@deftypevr {Global} @kwd{volatile} @typ{U8} time_slice
+This variable represent the number of jiffies left for the current
+running task before rescheduling is done by the system.
+
+@end deftypevr

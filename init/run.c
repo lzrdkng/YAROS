@@ -27,7 +27,7 @@
 #include "util/dlist.h"
 
 void
-krun()
+run_kernel()
 {
     struct task *T;
 

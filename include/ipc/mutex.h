@@ -23,7 +23,7 @@
 #include <util/atomic.h>
 
 struct mutex {
-	U8 bits;
+     U8 keys;
 };
 
 /*
@@ -31,14 +31,13 @@ struct mutex {
  *
  * @param mutex The mutex to acquire
  *
- * @param bit The bit in the mutex to acquire
+ * @param key The bit in the mutex to acquire
  *
  * @return OK on success, -EBUSY if mutex is already acquired
  *
- * @warning THIS SHOULD NEVER BE CALL IN ISR!!!
+ * @warning THIS SHOULD NEVER BE CALL IN A ISR!!!
  */
-error_t
-try_lock(volatile struct mutex *mutex, U8 bit);
+error_t try_lock(volatile struct mutex *mutex, U8 key);
 
 
 /*
@@ -46,30 +45,30 @@ try_lock(volatile struct mutex *mutex, U8 bit);
  *
  * @param mutex The mutex to acquire
  *
- * @param bit The bit in the mutex to acquire
+ * @param key The bit in the mutex to acquire
  *
  * @note Once return, it's guaranteed that the caller has acquired the
  * mutex.
  *
  * @warning THIS SHOULD NEVER BE CALL IN ISR!!!
  */
-static inline void
-spinlock(volatile struct mutex *mutex, U8 bit)
+static inline void spinlock(volatile struct mutex *mutex, U8 key)
 {
-	while (try_lock(mutex, bit) != OK)
-        reschedule();
+     while (try_lock(mutex, key) != OK)
+          reschedule();
 }
 
 
 /*
- * @brief Release a mutex.
+ * @brief Release a mutex and reschedule.
  */
-static inline void
-unlock(volatile struct mutex *mutex, U8 bit)
+static inline void unlock(volatile struct mutex *mutex, U8 key)
 {
-	ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-		mutex->bits &= ~_BV(bit);
-	}
+     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+          mutex->keys &= ~_BV(key);
+     }
+
+     reschedule();
 }
 
 #endif /* YAROS_MUTEX_H */

@@ -21,11 +21,11 @@
 #include "ipc/mutex.h"
 
 error_t
-try_lock(volatile struct mutex *mutex, U8 bit)
+try_lock(volatile struct mutex *mutex, U8 key)
 {
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-        if ((mutex->bits & _BV(bit)) == 0) {
-            mutex->bits |= _BV(bit);        /* Acquire */
+        if ((mutex->keys & _BV(key)) == 0) {
+            mutex->keys |= _BV(key);        /* Acquire */
             return OK;
         }
     }

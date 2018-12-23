@@ -1,0 +1,9 @@
+@deftypefn {} void unlock @
+  (volatile struct mutex *mutex, U8 key)
+@sp 1
+Unlock the mutex pointed by @code{mutex} with key @code{key}.
+@sp 1
+@note{}
+The task is then reschedule.  This is a design decision so that other
+task that are waiting for the mutex have a chance to lock it.
+@end deftypefn

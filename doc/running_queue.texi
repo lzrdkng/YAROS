@@ -1,0 +1,4 @@
+@deftypevr {Global} @kwd{struct} @typ{dlist} running_queue
+Represent the queue of task that are ready for scheduling.
+
+@end deftypevr

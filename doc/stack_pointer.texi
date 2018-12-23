@@ -1,0 +1,6 @@
+@deftypevr {Global} @typ{U16} * @kwd{volatile} stack_pointer
+
+Represent the address of the top of the stack of the current running
+task.
+
+@end deftypevr

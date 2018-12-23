@@ -55,15 +55,11 @@ enum irq {
      IRQ_USART1_TX
 };
 
-error_t
-disable_irq(int irq);
+error_t disable_irq(int irq);
 
-error_t
-disable_irq_unsafe(int irq);
+error_t disable_irq_unsafe(int irq);
 
-error_t
-enable_irq(int irq);
+error_t enable_irq(int irq);
 
-error_t
-enable_irq_unsafe(int irq);
+error_t enable_irq_unsafe(int irq);
 #endif /* YAROS_IRQ_H */

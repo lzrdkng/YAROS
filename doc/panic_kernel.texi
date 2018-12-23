@@ -1,4 +1,4 @@
-@deftypefn {} void kpanic @
+@deftypefn {} void panic_kernel @
   (void)
 @sp 1
 Stop all system activities and print @print{} KERNEL PANIC.

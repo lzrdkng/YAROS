@@ -1,4 +1,4 @@
-@deftypefn {} void kinit @
+@deftypefn {} void init_kernel @
   (void)
 @sp 1
 Initiliaze the kernel.  This should be the first function you call in your main.

@@ -23,15 +23,11 @@
 /**
  * Initialize
  */
-ssize_t
-init_usart(int device, ssize_t baud_rate);
+ssize_t init_usart(int device, ssize_t baud_rate);
 
-ssize_t
-write_usart(int device, const void *buff, size_t len);
+error_t fini_usart(int device);
 
-ssize_t
-read_usart(int device, void *buff, size_t len);
+ssize_t write_usart(int device, const void *buff, size_t len);
 
-error_t
-fini_usart(int device);
+ssize_t read_usart(int device, void *buff, size_t len);
 #endif /* YAROS_USART_H */

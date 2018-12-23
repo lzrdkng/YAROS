@@ -162,9 +162,9 @@ struct task {
  *
  * @return A pointer to the task.
  */
-NON_NULL(1,2) struct task* init_task(struct task *task,
-                                     taskfunc func,
-                                     void *data);
+NON_NULL(1,2) void init_task(struct task *task,
+                             taskfunc func,
+                             void *data);
 
 /**
  * @brief kill the current task.
@@ -191,7 +191,7 @@ NO_OPTIMIZE void kill_task(struct task *task);
 #define run_task(TASK, FUNC, DATA)              \
   do {                                          \
     init_task(TASK, FUNC, DATA);                \
-    resume(TASK);                               \
+    resume_task(TASK);                               \
   } while (0)
 
 

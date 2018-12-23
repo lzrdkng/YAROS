@@ -1,4 +1,4 @@
-@deftypefn {} void krun @
+@deftypefn {} void run_kernel @
   (void)
 @sp 1
 Launch the kernel scheduler.  This should be the last thing in your main.

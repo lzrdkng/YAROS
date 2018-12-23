@@ -1,0 +1,4 @@
+@deftypevr {Global} @kwd{struct} @typ{dlist} * @kwd{volatile} current_task
+A pointer to the current task running.
+
+@end deftypevr

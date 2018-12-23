@@ -6,6 +6,6 @@ Initialize and resume a task.
 @expansion{}
 (@{
 init_task(@code{TASK}, @code{FUNC}, @code{DATA});
-resume(@code{TASK});
+resume_task(@code{TASK});
 @})
 @end deftypefn

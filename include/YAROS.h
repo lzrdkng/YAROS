@@ -23,7 +23,6 @@
 #include "kernel/msg.h"
 #include "kernel/panic.h"
 #include "kernel/sched.h"
-#include "kernel/suspend.h"
 #include "kernel/sysclk.h"
 #include "kernel/task.h"
 #include "kernel/type.h"

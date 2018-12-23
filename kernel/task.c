@@ -102,7 +102,7 @@ static inline NON_NULL()  void
 }
 
 
-struct task*
+void
 init_task(struct task *T,
           taskfunc func,
           void *data)
@@ -134,8 +134,6 @@ init_task(struct task *T,
       * Put the task to sleep
       */
      suspend_task(T);
-
-     return T;
 }
 
 void
@@ -189,7 +187,7 @@ kill_task(struct task *T)
 }
 
 NON_NULL() void
-__suspend_task(struct task *T)
+     __suspend_task(struct task *T)
 {
      T->running = TASK_SLEEP;
 
@@ -197,7 +195,7 @@ __suspend_task(struct task *T)
 }
 
 OS_MAIN OPTIMIZE("s") void
-__suspend_self()
+     __suspend_self()
 {
      __suspend_task((struct task*)current_task);
 
@@ -251,17 +249,14 @@ resume_task(struct task *T)
 
           struct task *pos;
 
-          if (dlist_is_empty(&running_queue)) {
-               dlist_move_tail(&T->self, &running_queue);
-          }
-          else {
-               dlist_for_each_entry(pos, &running_queue, self) {
+          dlist_for_each_entry(pos, &running_queue, self) {
 
-                    if (pos->priority >= T->priority) {
-                         dlist_move_tail(&T->self, &pos->self);
-                         break;
-                    }
+               if (pos->priority >= T->priority) {
+                    dlist_move_tail(&T->self, &pos->self);
+                    return;
                }
           }
+
+          dlist_move_tail(&T->self, &running_queue);
      }
 }
