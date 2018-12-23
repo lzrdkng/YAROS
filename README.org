@@ -1,18 +1,18 @@
 * Yet Another Real-time OS
   *YAROS* is a small project of mine that I did during class for fun
-   It's my first attempt to make an OS kernel and it's not yet a
-   real-time OS, but it will be.
+   It's my first attempt to make an OS kernel.
 
 * Licenses
   YAROS is release on GPL 3.0 by default, see LICENSE.  However, I can
   give you copyright for other licenses such as LGPL.  Please contact
   me privately on this matter.
+
 * Manuals
   YAROS as now its own manual.
 
-  You can read the manual of YAROS on GitHub [[https://lzrdkng.github.io/YAROS-manual/][here]].  You can also
-  compile the manual yourself in *info*, *html* or *pdf*, *dvi*, *ps*,
-  formats.
+  You can read the manual of YAROS on GitHub [[https://lzrdkng.github.io/YAROS-manual/][here]], or you can download
+  in differents format [[https://github.com/lzrdkng/YAROS-manual][here.]]  You can also compile the manual yourself
+  in *info*, *html* or *pdf*, *dvi*, *ps*, formats.
 
   To compile the manual, use *make format*.  This will compile the
   manual under *build/format/YAROS.format*, where *format* is the file
@@ -29,9 +29,13 @@
 * Dependencies
   YAROS use *AVR Libc* and was designed to be used with *GCC*.  Other
   compilers will *not* be supported.
+
 * Example
   #+BEGIN_SRC C
-    #include <YAROS/YAROS.h>
+    #include "init/init.h"
+    #include "kernel/task.h"
+    #include "kernel/sysclk.h"
+    #include "devices/usart.h"
 
     /* foo has priority level 0, nice value of 5 and a stack of 50 bytes */
     struct task foo = TASK(TASK_P0, TASK_N5, 50);
@@ -48,57 +52,57 @@
     int
     main(int argc, char *argv[])
     {
-        /* Initialize the Kernel */
-        init_kernel();
+         /* Initialize the Kernel */
+         init_kernel();
 
-        /* Foo is scheduled */
-        run_task(&foo,
-                 do_foo,
-                 &bar);
+         /* Foo is scheduled */
+         run_task(&foo,
+                  do_foo,
+                  &bar);
 
-        /* Bar is suspended */
-        init_task(&bar,
-                  do_bar,
-                  NULL);
+         /* Bar is suspended */
+         init_task(&bar,
+                   do_bar,
+                   NULL);
 
-        run_kernel();
+         run_kernel();
     }
 
 
     OS_TASK void
     do_foo(void *bar_task)
     {
-        static const char foo_str[] = {'f', 'o', 'o', '\n'};
+         static const char foo_str[] = {'f', 'o', 'o', '\n'};
 
-        while (1) {
+         while (1) {
 
-            /* Write "foo_str\n" to USART 0 */
-            write_usart(0, foo_str, sizeof(foo_str));
+              /* Write "foo_str\n" to USART 0 */
+              write_usart(0, foo_str, sizeof(foo_str));
 
-            /* Resume bar */
-            resume_task(&bar);
+              /* Resume bar */
+              resume_task(&bar);
 
-            /* Wait 1 second */
-            wait(HZ);
+              /* Wait 1 second */
+              wait(HZ);
 
-            /* Suspend bar */
-            suspend_task(&bar);
-        }
+              /* Suspend bar */
+              suspend_task(&bar);
+         }
     }
 
     OS_TASK void
     do_bar(void *nil)
     {
-        static const char bar_str[] = {'b', 'a', 'r', '\n'};
+         static const char bar_str[] = {'b', 'a', 'r', '\n'};
 
-        while (1) {
+         while (1) {
 
-            /* Write "bar\n" to USART 0 */
-            write_usart(0, bar_str, sizeof(bar_str));
-            
-            /* Wait 1/2 second */
-            wait(HZ / 2);
-        }
+              /* Write "bar\n" to USART 0 */
+              write_usart(0, bar_str, sizeof(bar_str));
+
+              /* Wait 1/2 second */
+              wait(HZ / 2);
+         }
     }
   #+END_SRC
 ** Output
