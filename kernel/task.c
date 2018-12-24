@@ -128,7 +128,7 @@ init_task(struct task *T,
       * Move the stack pointer on top of what was pushed + registers
       * and SREG.
       */
-     T->stack_pointer = (U16*)(T->stack + T->size - 38);
+     T->stack_pointer = (U8*)(T->stack + T->size - 38);
 
      /*
       * Put the task to sleep
@@ -153,7 +153,7 @@ kill_self(void)
 
      if (current_task == &running_queue) {
           /* No more task; End of time */
-          kpanic();
+          panic_kernel(0);
      }
 
      stack_pointer = ((struct task*)current_task)->stack_pointer;
@@ -206,7 +206,7 @@ OS_MAIN OPTIMIZE("s") void
 
      /* Switching context */
      if (&running_queue == running_queue.next)
-          kpanic();
+          panic_kernel(0);
 
      current_task = running_queue.next;
      stack_pointer = ((struct task*)current_task)->stack_pointer;

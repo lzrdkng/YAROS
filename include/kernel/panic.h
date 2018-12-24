@@ -18,10 +18,22 @@
 #ifndef YAROS_PANIC_H
 #define YAROS_PANIC_H
 
+#include <avr/interrupt.h>
 #include "kernel/def.h"
 
-NO_RETURN void _kpanic();
+#define panic_kernel(INFOS)                             \
+     do {                                               \
+          asm volatile("cli\n\t"                        \
+                       "push r0\n\t"                    \
+                       "push r1\n\t"                    \
+                       "push r25\n\t"                   \
+                       "push r24\n\t");                 \
+          _panic_kernel( INFOS );                       \
+     } while (0)
 
-#define kpanic() _kpanic();
+
+NO_RETURN void _panic_kernel(S16 infos);
+
+void recover_kernel(S16 infos);
 
 #endif /* YAROS_PANIC_H */

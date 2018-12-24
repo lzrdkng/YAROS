@@ -40,7 +40,7 @@ run_kernel()
             ;
         asm volatile("cli" ::: "memory");
 #endif
-        kpanic();
+        panic_kernel(0);
     }
 
     /*

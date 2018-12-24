@@ -79,6 +79,10 @@ The Concepts of YAROS
 * Scheduling:: How scheduling is done.
 * Synchronizing:: How the synchronyze tasks.
 
+The Internal of YAROS
+
+
+
 @end detailmenu
 
 @end menu
@@ -429,6 +433,8 @@ This chapter will explain to you how YAROS work internally.  After
 reading this chapter, you should be able to understand how the
 scheduler work with tasks, how interupts and devices are manage and
 how mutexes work.
+
+
 
 @section Structures
 @include struct_dlist.texi

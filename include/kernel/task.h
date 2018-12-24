@@ -139,7 +139,7 @@ enum task_nice {
  */
 struct task {
   struct dlist self;
-  U16 * volatile stack_pointer;
+  U8 * volatile stack_pointer;
   U8 running:1;
   U8 priority:3;
   U8 nice:4;

@@ -1,5 +1,9 @@
+#include <string.h>
+#include <stdio.h>
+
 #include "init/init.h"
 #include "kernel/task.h"
+#include "kernel/panic.h"
 #include "kernel/sysclk.h"
 #include "devices/usart.h"
 
@@ -52,7 +56,7 @@ do_foo(void *bar_task)
           wait(HZ);
 
           /* Suspend bar */
-          suspend_task(&bar);
+          panic_kernel(1562);
      }
 }
 
@@ -70,3 +74,4 @@ do_bar(void *nil)
           wait(HZ / 2);
      }
 }
+

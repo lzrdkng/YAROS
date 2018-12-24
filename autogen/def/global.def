@@ -45,7 +45,7 @@ variables =
  */
 variables =
   {
-   name  = "U16 * volatile stack_pointer";
+   name  = "U8 * volatile stack_pointer";
    value = "NULL";
   };
 
