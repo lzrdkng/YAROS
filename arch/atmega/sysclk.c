@@ -72,46 +72,46 @@
 
 /* For 8Mhz. TODO: Make this good for every frequency */
 #if HZ == 50
-# define KCLK_SRC CLK_P1024
-# define KCLK_SCALE 1024
-# define KCLK_COUNT 100
-# define KCLK_LATENCY 4
+# define SYS_CLK_SRC CLK_P1024
+# define SYS_CLK_SCALE 1024
+# define SYS_CLK_COUNT 100
+# define SYS_CLK_LATENCY 4
 
 #elif HZ == 100
-# define KCLK_SRC CLK_P1024
-# define KCLK_SCALE 1024
-# define KCLK_COUNT 178
-# define KCLK_LATENCY 8
+# define SYS_CLK_SRC CLK_P1024
+# define SYS_CLK_SCALE 1024
+# define SYS_CLK_COUNT 178
+# define SYS_CLK_LATENCY 8
 
 #elif HZ == 125
-# define KCLK_SRC CLK_P256
-# define KCLK_SCALE 256
-# define KCLK_COUNT 6
-# define KCLK_LATENCY 0
+# define SYS_CLK_SRC CLK_P256
+# define SYS_CLK_SCALE 256
+# define SYS_CLK_COUNT 6
+# define SYS_CLK_LATENCY 0
 
 #elif HZ == 200
-# define KCLK_SRC CLK_P1024
-# define KCLK_SCALE 1024
-# define KCLK_COUNT 217
-# define KCLK_LATENCY 16
+# define SYS_CLK_SRC CLK_P1024
+# define SYS_CLK_SCALE 1024
+# define SYS_CLK_COUNT 217
+# define SYS_CLK_LATENCY 16
 
 #elif HZ == 250
-# define KCLK_SRC CLK_P256
-# define KCLK_SCALE 256
-# define KCLK_COUNT 131
-# define KCLK_LATENCY 0
+# define SYS_CLK_SRC CLK_P256
+# define SYS_CLK_SCALE 256
+# define SYS_CLK_COUNT 131
+# define SYS_CLK_LATENCY 0
 
 #elif HZ == 500
-# define KCLK_SRC CLK_P64
-# define KCLK_SCALE 64
-# define KCLK_COUNT 6
-# define KCLK_LATENCY 0
+# define SYS_CLK_SRC CLK_P64
+# define SYS_CLK_SCALE 64
+# define SYS_CLK_COUNT 6
+# define SYS_CLK_LATENCY 0
 
 #elif HZ == 1000
-# define KCLK_SRC CLK_P64
-# define KCLK_SCALE 64
-# define KCLK_COUNT 131
-# define KCLK_LATENCY 0
+# define SYS_CLK_SRC CLK_P64
+# define SYS_CLK_SCALE 64
+# define SYS_CLK_COUNT 131
+# define SYS_CLK_LATENCY 0
 
 #else
 #  error HZ value not supported.
@@ -143,7 +143,7 @@ increment_jiffies()
          * We need to to adjust the initial value of TCNT0 with the
          * 7 previous cycles and the next 2.
          */
-        "ldi r24, " xstr(KCLK_COUNT + (9 / KCLK_SCALE)) "\n\t"
+        "ldi r24, " xstr(SYS_CLK_COUNT + (9 / SYS_CLK_SCALE)) "\n\t"
         "out 0x26, r24\n\t"
 
         /* Load jiffies lower 16 bits */
@@ -161,11 +161,11 @@ increment_jiffies()
         "adc r24, r1\n\t"
         "sts jiffies+3, r24\n\t"
 
-#  if KCLK_LATENCY != 0
+#  if SYS_CLK_LATENCY != 0
 
         /*
          * If the timer as a latency because of HZ, we have to
-         * increment TCNT0 every KCLK_LATENCY interrupts. See the
+         * increment TCNT0 every SYS_CLK_LATENCY interrupts. See the
          * table in clock.h
          */
 
@@ -173,14 +173,14 @@ increment_jiffies()
         "lds r24, jiffies\n\t"
 
 
-        /* if (jiffies % KCLK_LATENCY == 0) */
+        /* if (jiffies % SYS_CLK_LATENCY == 0) */
         /* BRANCH .restore if != 0 */
-        "andi r24, " xstr(KCLK_LATENCY - 1) "\n\t"
+        "andi r24, " xstr(SYS_CLK_LATENCY - 1) "\n\t"
         "brne .restore\n\t"
 
         /* ++TCNT0 */
         "in r24, 0x26\n\t"
-#  if KCLK_SCALE <= 29        /* Same reason has before */
+#  if SYS_CLK_SCALE <= 29        /* Same reason has before */
         "subi r24, lo8(-(2))\n\t"
 #  else
         "subi r24, lo8(-(1))\n\t"
@@ -188,7 +188,7 @@ increment_jiffies()
         "out 0x26, r24\n"
 
 
-#  endif    /* KCLK_LATENCY */
+#  endif    /* SYS_CLK_LATENCY */
         ".restore:\n\t"
         //  "ret"
         );
@@ -201,7 +201,7 @@ increment_jiffies()
  *
  * An optimization could be made. Instead of using the timer overflow
  * vector, it would be possible to use one of the compare units
- * (KCLK_COMPA_vect or KCLK_COMPB_vect) and put the timer in CTC
+ * (SYS_CLK_COMPA_vect or SYS_CLK_COMPB_vect) and put the timer in CTC
  * mode. This would save the 2 instructions of reseting the TCNT to
  * the appropriate value, because the hardware will do it for
  * us. Therefore, it would be possible to save 2 cycles and 4 bytes of
@@ -210,7 +210,7 @@ increment_jiffies()
  * However, I'll rather use the timer overflow instead, leaving the
  * two compare units free for something else.
  */
-ISR(KCLK_vect, ISR_NAKED)
+ISR(SYS_CLK_vect, ISR_NAKED)
 {
     /*
      * Minimal context is r25, r24 and SREG. Therefore, everything has
@@ -262,9 +262,9 @@ ISR(KCLK_vect, ISR_NAKED)
 void
 init_sysclk(void)
 {
-    if (init_clk(KCLK,
+    if (init_clk(SYS_CLK,
                  CLK_NORMAL,
-                 KCLK_SRC,
+                 SYS_CLK_SRC,
                  0) != OK) {
         FATAL("init_sysclk");
     }

@@ -21,16 +21,17 @@
  */
 #include "kconfig.h"
 
-#ifdef CONFIG_KCLK
-#  define KCLK CONFIG_KCLK
+#ifdef CONFIG_SYS_CLK
+#  define SYS_CLK CONFIG_SYS_CLK
 #else
 #  error "CONFIG_CLK: Kernel Clock is not defined."
 #endif
 
 #if KLCK == CLK_0
-#  define KCLK_vect TIMER0_OVF_vect
+#  define SYS_CLK_vect TIMER0_OVF_vect
 #endif
 
+#define VERBOSE_LEVEL 5
 
 /*
  * Frequency at which the TIMER0_OVF_vect interrupt should be call.

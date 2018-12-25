@@ -18,7 +18,7 @@
 
 
 # Microcontroller
-MCU = atmega324pa
+MCU = atmega324a
 
 
 # Project
@@ -144,12 +144,12 @@ $(BIN_DIR)/%.hex: $(TARGET)
 	@echo "AVR COPY"
 	@$(OBJCOPY) -j .text -j .data -O $(HEXFORMAT) $< $@
 
-$(TARGET): $(OBJ) ../lib/libyaros.a
+$(TARGET): $(OBJ) ../lib/libYAROS-atmega324pa-1.0.0.a
 	@echo "LD $^ $(LIBS) -> $@"
 	@$(CC) $(CPPFLAGS) $(LDFLAGS) -o $@ $(OBJ) $(LIBS)
 	@avr-strip --remove-section=.comment $@ -o $@-stripped
 
-../lib/libyaros.a:
+../lib/libYAROS-atmega324pa-1.0.0.a:
 	@echo "MAKE .."
 	@make -s -C ..
 

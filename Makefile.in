@@ -66,24 +66,22 @@ lispdir?=$(datarootdir)/emacs/site-lisp
 localedir?=$(datarootdir)/locale
 
 # Top-level directory for installing man pages
-#mandir?=$(datarootdir)/man
+mandir?=$(datarootdir)/man
 
 # Directory for installing section 1
-#man1dir=$(mandir)/man1
+man1dir=$(mandir)/man1
 
 # Section 2
-#man2dir=$(mandir)/man2
+man2dir=$(mandir)/man2
 
 #manext?=.
-#man1ext=$(manext)1
-#man2ext=$(manext)2
+man1ext=$(manext)1
+man2ext=$(manext)2
 
 # Directory for the sources being compiled
 #srcdir?=
 
-# microcontroller
-#MCU = atmega324pa
-#ARCH = atmega
+VERBOSE_LEVEL?=5
 
 # Target Archive
 TARGET_NAME=lib$(PACKAGE)-$(MCU)-$(PACKAGE_VERSION)
@@ -118,7 +116,6 @@ DIALECT := \
 -funsigned-char
 
 WFORMAT := \
--fmessage-length=72 \
 -fdiagnostics-color=auto
 
 WARNINGS :=  \

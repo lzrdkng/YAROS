@@ -22,9 +22,6 @@
 #include <string.h>
 
 #include "kernel/def.h"
-#include "kernel/errno.h"
-
-#include "devices/usart.h"
 
 #define COLOR_NC "\e[0m"
 #define COLOR_WHITE "\e[1;37m"
@@ -61,7 +58,7 @@
 
 #define MSG_FMT(STR) __FILE__ ":" xstr(__LINE__) ":" STR
 
-  extern const char NL[] PROGMEM;
+extern const char NL[] PROGMEM;
 extern void __send_debug_header();
 extern void __send_info_header();
 extern void __send_warning_header();
@@ -77,9 +74,9 @@ extern void __send_nl();
     static const char __DEBUG_STR__[] PROGMEM = MSG_FMT(STR);           \
     char __debug_buff__[1];                                             \
     __send_debug_header();                                              \
-    for (U16 __debug_i__=0; __debug_i__<sizeof(__DEBUG_STR__); ++__debug_i__) { \
-      memcpy_P(__debug_buff__, &__DEBUG_STR__[__debug_i__], 1);         \
-      write_usart(0, __debug_buff__, 1);                                \
+    for (U16 __debug_i__=0; __debug_i__<ARRAY_SIZE(__DEBUG_STR__); ++__debug_i__) { \
+         memcpy_P(__debug_buff__, &__DEBUG_STR__[__debug_i__], 1);      \
+         putc_kernel(__debug_buff__[0]);                                \
     }                                                                   \
     __send_nl();                                                        \
   })
@@ -94,7 +91,7 @@ extern void __send_nl();
     __send_info_header();                                               \
     for (U16 __info_i__=0; __info_i__<sizeof(__INFO_STR__); ++__info_i__) { \
       memcpy_P(__info_buff__, &__INFO_STR__[__info_i__], 1);            \
-      write_usart(0, __info_buff__, 1);                                 \
+      putc_kernel(__info_buff__[0]);                                      \
     }                                                                   \
     __send_nl();                                                        \
   })
@@ -109,8 +106,8 @@ extern void __send_nl();
     char __warning_buff__[1];                                           \
     __send_warning_header();                                            \
     for (U16 __warning_i__=0; __warning_i__<sizeof(__WARNING_STR__); ++__warning_i__) { \
-      memcpy_P(__warning_buff__, &__WARNING_STR__[__warning_i__], 1);   \
-      write_usart(0, __warning_buff__, 1);                              \
+         memcpy_P(__warning_buff__, &__WARNING_STR__[__warning_i__], 1); \
+         putc_kernel(__warning_buff__[0]);                          \
     }                                                                   \
     __send_nl();                                                        \
   })
@@ -125,7 +122,7 @@ extern void __send_nl();
     __send_error_header();                                              \
     for (U16 __error_i__=0; __error_i__<sizeof(__ERROR_STR__); ++__error_i__) { \
       memcpy_P(__error_buff__, &__ERROR_STR__[__error_i__], 1);         \
-      write_usart(0, __error_buff__, 1);                                \
+      putc_kernel(__error_buff__[0]);                                \
     }                                                                   \
     __send_nl();                                                        \
   })
@@ -141,10 +138,14 @@ extern void __send_nl();
     __send_fatal_header();                                              \
     for (U16 __fatal_i__=0; __fatal_i__<sizeof(__FATAL_STR__); ++__fatal_i__) { \
       memcpy_P(__fatal_buff__, &__FATAL_STR__[__fatal_i__], 1);         \
-      write_usart(0, __fatal_buff__, 1);                                \
+      putc_kernel(__fatal_buff__[0]);                                     \
     }                                                                   \
     __send_nl();                                                        \
   })
 #endif
+
+int print_kernel(const char *fmt, ...);
+
+int putc_kernel(char c);
 
 #endif /* YAROS_MSG_H */

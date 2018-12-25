@@ -47,9 +47,6 @@ typedef JIFFY_TYPE jiffy_t;
 /* Task function */
 typedef void (*taskfunc) (void *);
 
-/* Boolean */
-#define false 0
-#define true 1
-typedef unsigned char bool;
+typedef _Bool bool;
 
 #endif /* YAROS_TYPE_H */

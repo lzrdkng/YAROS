@@ -19,6 +19,8 @@
 /* Standard */
 #include <assert.h>
 
+
+
 #include "kernel/config.h"
 #include "kernel/type.h"
 #include "kernel/errno.h"
@@ -34,6 +36,7 @@
 #define cast(TYPE, ...) ( TYPE ) ( __VA_ARGS__ )
 #define static_assert _Static_assert
 #define assert_type(t1, t2) static_assert(__builtin_types_compatible_P(t1, t2), "Type does not match")
+#define ARRAY_SIZE( ARRAY ) (sizeof( (ARRAY) ) / sizeof( (ARRAY) [0] ))
 
 #define COLD __attribute__((cold))
 #define DEPRECATED(MSG) __attribute__((deprecated( MSG )))

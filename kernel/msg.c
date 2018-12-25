@@ -15,7 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdarg.h>
+#include <stdio.h>
+
 #include "kernel/msg.h"
+#include "devices/usart.h"
 
 #if KERNEL_VERBOSE_LEVEL >= 5
 const char DEBUG_HEADER[] PROGMEM = GREEN("[DEBUG] ");
@@ -23,13 +27,11 @@ const char DEBUG_HEADER[] PROGMEM = GREEN("[DEBUG] ");
 void
 __send_debug_header()
 {
-    char buff[1];
+     char buff[ARRAY_SIZE(DEBUG_HEADER)];
 
-    for (U8 i = 0; i < sizeof(DEBUG_HEADER); ++i) {
-        memcpy_P(buff, &DEBUG_HEADER[i], 1);
-        write_usart(0, buff, 1);
-    }
+     memcpy_P(buff, &DEBUG_HEADER[0], ARRAY_SIZE(DEBUG_HEADER));
 
+     print_kernel(buff);
 }
 #endif
 
@@ -39,13 +41,11 @@ const char INFO_HEADER[] PROGMEM = PURPLE("[INFO] ");
 void
 __send_info_header()
 {
-    char buff[1];
+     char buff[ARRAY_SIZE(INFO_HEADER)];
 
-    for (U8 i = 0; i < sizeof(INFO_HEADER); ++i) {
-        memcpy_P(buff, &INFO_HEADER[i], 1);
-        write_usart(0, buff, 1);
-    }
+     memcpy_P(buff, &INFO_HEADER[0], ARRAY_SIZE(INFO_HEADER));
 
+     print_kernel(buff);
 }
 #endif
 
@@ -56,13 +56,11 @@ const char WARNING_HEADER[] PROGMEM = YELLOW("[WARNING] ");
 void
 __send_warning_header()
 {
-    char buff[1];
+     char buff[ARRAY_SIZE(WARNING_HEADER)];
 
-    for (U8 i = 0; i < sizeof(WARNING_HEADER); ++i) {
-        memcpy_P(buff, &WARNING_HEADER[i], 1);
-        write_usart(0, buff, 1);
-    }
+     memcpy_P(buff, &WARNING_HEADER[0], ARRAY_SIZE(WARNING_HEADER));
 
+     print_kernel(buff);
 }
 #endif
 
@@ -73,12 +71,11 @@ const char ERROR_HEADER[] PROGMEM = RED("[ERROR] ");
 void
 __send_error_header()
 {
-    char buff[1];
+     char buff[ARRAY_SIZE(ERROR_HEADER)];
 
-    for (U8 i = 0; i < sizeof(ERROR_HEADER); ++i) {
-        memcpy_P(buff, &ERROR_HEADER[i], 1);
-        write_usart(0, buff, 1);
-    }
+     memcpy_P(buff, &ERROR_HEADER[0], ARRAY_SIZE(ERROR_HEADER));
+
+     print_kernel(buff);
 
 }
 #endif
@@ -90,19 +87,51 @@ const char NL[] PROGMEM = {'\n'};
 void
 __send_fatal_header()
 {
-    char buff[1];
+     char buff[ARRAY_SIZE(FATAL_HEADER)];
 
-    for (U8 i = 0; i < sizeof(FATAL_HEADER); ++i) {
-        memcpy_P(buff, &FATAL_HEADER[i], 1);
-        write_usart(0, buff, 1);
-    }
+     memcpy_P(buff, &FATAL_HEADER[0], ARRAY_SIZE(FATAL_HEADER));
 
+     print_kernel(buff);
 }
 
-void __send_nl()
+void
+__send_nl()
 {
-    char buff[1];
-    memcpy_P(buff, NL, 1);
-    write_usart(0, buff, 1);
+     char buff[ARRAY_SIZE(NL)];
+
+     memcpy_P(buff, &NL[0], ARRAY_SIZE(NL));
+
+     print_kernel(buff);
 }
+
+static int
+printk(const char *fmt, ...)
+{
+     char buff[16];
+
+     va_list ap;
+
+     va_start(ap, fmt);
+
+     snprintf(buff, ARRAY_SIZE(buff), fmt, ap);
+
+     write_usart(0, buff, strlen(buff));
+
+     return 16;
+}
+
+static int
+putck(char c)
+{
+     write_usart(0, &c, 1);
+
+     return 1;
+}
+
+int __attribute__((weak, alias("printk"), format(printf, 1, 2)))
+print_kernel(const char *fmt, ...);
+
+int __attribute__((weak, alias("putck")))
+putc_kernel(char c);
+
 #endif

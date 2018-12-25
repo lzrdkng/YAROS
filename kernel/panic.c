@@ -30,35 +30,86 @@
 #include "kernel/sysclk.h"
 #include "devices/usart.h"
 
-static const char kernel_panic[] PROGMEM  = "KERNEL PANIC\n\n";
+static const char kernel_panic[] PROGMEM  = "\nKERNEL PANIC\n";
 
 static void
 __core_dumb(S16 infos)
 {
      char buff[32];
 
-     struct task *T = (struct task*)current_task;
+     struct task *T;
 
+     U8 n_running = 0;
+     U8 n_sleeping = 0;
+
+     dlist_for_each_entry(T, &running_queue, self) {
+          ++n_running;
+     }
+
+     dlist_for_each_entry(T, &sleeping_queue, self) {
+          ++n_sleeping;
+     }
+
+
+     /* KERNEL PANIC */
      strcpy_P(buff, kernel_panic);
-
      write_usart(0, buff, strlen(buff));
 
-     sprintf(buff, "infos:%d\n\n", infos);
+     /* Infos */
+     sprintf(buff, "\nInfos:%d\n", infos);
      write_usart(0, buff, strlen(buff));
 
-     for (int i=33; i>1; --i) {
-          sprintf(buff, "r%d\t0x%x\t%d\n",
-                  33-i,
-                  T->stack_pointer[i],
-                  T->stack_pointer[i]);
+
+     sprintf(buff, "\nRunning:%d\n", n_running);
+     write_usart(0, buff, strlen(buff));
+
+     /* Running Tasks */
+     dlist_for_each_entry(T, &running_queue, self) {
+
+          if (&(T->self) == current_task)
+               sprintf(buff, "\n\tTask 0x%x (*)\n", (U16)T);
+          else
+               sprintf(buff, "\n\tTask 0x%x\n", (U16)T);
+
+          write_usart(0, buff, strlen(buff));
+
+          for (int i=33; i>1; --i) {
+               sprintf(buff, "\t\tr%d\t0x%x\t%d\n",
+                       33-i,
+                       T->stack_pointer[i],
+                       T->stack_pointer[i]);
+               write_usart(0, buff, strlen(buff));
+          }
+
+          /* SREG */
+          sprintf(buff, "\t\tSREG\t0x%x\t%d\n",
+                  T->stack_pointer[1],
+                  T->stack_pointer[1]) ;
           write_usart(0, buff, strlen(buff));
      }
 
-     /* SREG */
-     sprintf(buff, "SREG\t0x%x\t%d\n",
-             T->stack_pointer[1],
-             T->stack_pointer[1]) ;
+     sprintf(buff, "\nSleeping:%d\n", n_sleeping);
      write_usart(0, buff, strlen(buff));
+
+     /* Sleeping Tasks */
+     dlist_for_each_entry(T, &sleeping_queue, self) {
+
+          sprintf(buff, "\n\tTask 0x%x\n", (U16)T);
+          write_usart(0, buff, strlen(buff));
+          for (int i=33; i>1; --i) {
+               sprintf(buff, "\t\tr%d\t0x%x\t%d\n",
+                       33-i,
+                       T->stack_pointer[i],
+                       T->stack_pointer[i]);
+               write_usart(0, buff, strlen(buff));
+          }
+
+          /* SREG */
+          sprintf(buff, "\t\tSREG\t0x%x\t%d\n",
+                  T->stack_pointer[1],
+                  T->stack_pointer[1]) ;
+          write_usart(0, buff, strlen(buff));
+     }
 }
 
 void __attribute__((weak, alias("__core_dumb")))
@@ -158,16 +209,7 @@ _panic_kernel(S16 infos)
 
      recover_kernel(infos);
 
-#ifndef KERNEL_TIMEOUT_BEFORE_RESET
-#warning "KERNEL_TIMEOUT_BEFORE_RESET was not defined in _panic_kernel"
-#define KERNEL_TIMEOUT_BEFORE_RESET -1
-#endif
-
-     /* Negative value is end of time */
-     while (KERNEL_TIMEOUT_BEFORE_RESET < 0)
+     /* Wait for Watchdog */
+     while (1)
           ;
-
-     mdelay(KERNEL_TIMEOUT_BEFORE_RESET);
-
-     asm volatile ("jmp 0");
 }

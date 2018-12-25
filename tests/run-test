@@ -3,7 +3,7 @@
 EXEC=./bin/test
 SIMULATOR=simavr
 TERMINAL=gnome-terminal
-MCU=atmega324pa
+MCU=atmega324a
 F_CPU=8000000
 declare -a MCU_SIMAVR=(atmega328
                        atmega328p
@@ -58,7 +58,7 @@ function check_simavr_mcu {
 
     for mcu in "${MCU_SIMAVR[@]}"
     do
-        if [ $mcu == $MCU ]
+        if [ ${mcu} == ${MCU} ]
         then
             return 0
         fi
@@ -68,37 +68,37 @@ function check_simavr_mcu {
 }
 
 
-if [ $SIMULATOR == "simavr" ]
+if [ ${SIMULATOR} == "simavr" ]
 then
     check_simavr_mcu
     if [ $? -ne 0 ]
     then
-        echo "MCU" $MCU "is not supported by" $SIMULATOR
+        echo "MCU" ${MCU} "is not supported by" ${SIMULATOR}
         exit 1
     fi
 
-    OPTS="--gdb --mcu $MCU --freq $F_CPU -v $EXEC"
+    OPTS="--gdb --mcu ${MCU} --freq ${F_CPU} -v ${EXEC}"
 
-elif [ $SIMULATOR == "simulavr" ]
+elif [ ${SIMULATOR} == "simulavr" ]
 then
-    OPTS="--gdbserver -p 1234 --device $MCU --cpufrequency $F_CPU -V --file $EXEC"
+    OPTS="--writetopipe 0xC6,dump --gdb-debug --device ${MCU} --cpufrequency ${F_CPU} -V --file ${EXEC}"
 else
-    echo "Simulator $SIMULATOR is not supported"
+    echo "Simulator ${SIMULATOR} is not supported"
     exit 1
 fi
 
 
 if [ $TERMINAL == "gnome-terminal" ]
 then
-    CMD="$TERMINAL -- $SIMULATOR $OPTS"
+    CMD="${TERMINAL} -- ${SIMULATOR} ${OPTS}"
 elif [ $TERMINAL == "konsole" ]
 then
-    CMD="$TERMINAL --workdir $PWD --seperate -e $SIMULATOR $OPTS &"
+    CMD="${TERMINAL} --workdir ${PWD} --seperate -e ${SIMULATOR} ${OPTS} &"
 else
-    echo "Terminal $TERMINAL is not supported"
+    echo "Terminal ${TERMINAL} is not supported"
     exit 1
 fi
 
-eval $CMD
-avr-gdb -x .gdbinit $EXEC
-pkill $SIMULATOR
+eval ${CMD}
+avr-gdb -x .gdbinit ${EXEC}
+pkill ${SIMULATOR}

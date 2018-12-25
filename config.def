@@ -1,0 +1,30 @@
+autogen definitions config;
+
+config =
+{
+     name  = "WITH_DEBUG";
+};
+
+config =
+{
+     name  = "STACK_SIZE";
+     value = 16;
+};
+
+config =
+{
+     name  = "SYS_CLK";
+     value = "CLK_0";
+};
+
+config =
+{
+     name  = "HZ";
+     value = 100;
+};
+
+config =
+{
+     name  = "F_CPU";
+     value = "8000000L";
+};
