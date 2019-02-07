@@ -18,7 +18,7 @@
 #ifndef YAROS_ERRNO_H
 #define YAROS_ERRNO_H
 
-typedef enum {
+enum {
   OK = 0,
   ENOTSUP,						/*< Opperation Not Supported */
   EBUSY,						/*< Device is Busy */
@@ -27,6 +27,8 @@ typedef enum {
   EINV,							/*< Invalid Value */
   E2BIG,						/*< Value too big */
   ESLEEP,                       /*< Task is sleeping */
-} error_t;
+};
+
+typedef int error_t;
 
 #endif /* YAROS_ERRNO_H */

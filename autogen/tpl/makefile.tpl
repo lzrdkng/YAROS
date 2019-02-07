@@ -22,7 +22,7 @@ MCU=[< (getenv "MCU") >]
 
 [< FOR auto_generate "" >]
 [< TARGET >]: [< definition >] [< template >]
-	@autogen --select-suffix=[< suffix >] --source-time --override-tpl=[< template >] --definitions=[< definition >] --base-name=[< base_name >]
+	@autogen --select-suffix=[< suffix >] --override-tpl=[< template >] --definitions=[< definition >] --base-name=[< base_name >]
 	@mv [< base_name >].[< suffix >] [< dir >]
 	@echo "AUTOGEN" [< TARGET >]
 [< ENDFOR auto_generate >]

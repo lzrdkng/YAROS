@@ -2,7 +2,7 @@
 
 EXEC=./bin/test
 SIMULATOR=simavr
-TERMINAL=gnome-terminal
+TERMINAL=urxvt
 MCU=atmega324a
 F_CPU=8000000
 declare -a MCU_SIMAVR=(atmega328
@@ -94,6 +94,9 @@ then
 elif [ $TERMINAL == "konsole" ]
 then
     CMD="${TERMINAL} --workdir ${PWD} --seperate -e ${SIMULATOR} ${OPTS} &"
+elif [ $TERMINAL == "urxvt" ]
+then
+     CMD="${TERMINAL} -e ${SIMULATOR} ${OPTS} &"
 else
     echo "Terminal ${TERMINAL} is not supported"
     exit 1

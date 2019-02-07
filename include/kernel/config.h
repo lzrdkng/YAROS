@@ -24,7 +24,7 @@
 #ifdef CONFIG_SYS_CLK
 #  define SYS_CLK CONFIG_SYS_CLK
 #else
-#  error "CONFIG_CLK: Kernel Clock is not defined."
+#  error "CONFIG_SYS_CLK: Kernel Clock is not defined."
 #endif
 
 #if KLCK == CLK_0

@@ -22,53 +22,51 @@
 
 #include <util/atomic.h>
 
+/**
+ * struct mutex my_mutex = INIT_MUTEX;
+ */
+#define INIT_MUTEX {NULL}
+
 struct mutex {
-     U8 keys;
+        void *owner;
 };
+
 
 /*
  * @brief Try to acquire a mutex.
  *
  * @param mutex The mutex to acquire
  *
- * @param key The bit in the mutex to acquire
- *
  * @return OK on success, -EBUSY if mutex is already acquired
  *
- * @warning THIS SHOULD NEVER BE CALL IN A ISR!!!
+ * @warning This should never be call in ISR
  */
-error_t try_lock(volatile struct mutex *mutex, U8 key);
-
+error_t try_lock_mutex(volatile struct mutex *mutex);
 
 /*
  * @brief Loop until mutex is acquire.
  *
  * @param mutex The mutex to acquire
  *
- * @param key The bit in the mutex to acquire
- *
  * @note Once return, it's guaranteed that the caller has acquired the
  * mutex.
  *
- * @warning THIS SHOULD NEVER BE CALL IN ISR!!!
+ * @warning This should never be call in ISR
  */
-static inline void spinlock(volatile struct mutex *mutex, U8 key)
-{
-     while (try_lock(mutex, key) != OK)
-          reschedule();
-}
+volatile struct mutex * lock_mutex(volatile struct mutex *mutex);
 
 
 /*
- * @brief Release a mutex and reschedule.
+ * @brief Release a mutex.
+ *
+ * @mutex: The mutex to release
+ *
+ * @return OK on success, -EBUSY if the task trying to release the
+ * mutex doesn't own it.
  */
-static inline void unlock(volatile struct mutex *mutex, U8 key)
-{
-     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-          mutex->keys &= ~_BV(key);
-     }
+error_t unlock_mutex(volatile struct mutex *mutex);
 
-     reschedule();
-}
+#define LOCK_BLOCK(MUTEX) \
+        for (volatile struct mutex *__mutex__= lock_mutex(MUTEX); __mutex__; unlock_mutex(__mutex__), __mutex__=NULL, reschedule())
 
 #endif /* YAROS_MUTEX_H */

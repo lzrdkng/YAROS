@@ -1,0 +1,11 @@
+autogen definitions test;
+
+
+tests =
+{
+     name       = "hello_world";
+     simulator  = "simulavr";
+     devices    = "atmega324a";
+     f_cpu      = 8000000;
+     pipe_out   = "0x6C";
+};

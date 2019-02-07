@@ -21,14 +21,39 @@
 #include "ipc/mutex.h"
 
 error_t
-try_lock(volatile struct mutex *mutex, U8 key)
+try_lock_mutex(volatile struct mutex *mutex)
 {
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-        if ((mutex->keys & _BV(key)) == 0) {
-            mutex->keys |= _BV(key);        /* Acquire */
-            return OK;
-        }
-    }
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+                if (mutex->owner == NULL) {
+                        mutex->owner = current_task;
+                        return OK;
+                }
 
-    return -EBUSY;
+                if (mutex->owner == current_task)
+                        return OK;
+        }
+
+        return -EBUSY;
+}
+
+volatile struct mutex *
+lock_mutex(volatile struct mutex *mutex)
+{
+        while (try_lock_mutex(mutex) != OK)
+                reschedule();
+
+        return mutex;
+}
+
+error_t
+unlock_mutex(volatile struct mutex *mutex)
+{
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+                if (mutex->owner == current_task) {
+                        mutex->owner = NULL;
+                        return OK;
+                }
+        }
+
+        return -EBUSY;
 }
