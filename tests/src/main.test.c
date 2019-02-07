@@ -52,11 +52,13 @@ do_foo(void *bar_task)
 
      while (1) {
 
-             LOCK_BLOCK(&mutex) {
+             WITH_LOCK(&mutex) {
                      for (U8 i=0; i<10; ++i) {
                              print_kernel(foo_str);
                              wait(HZ / 2);
                      }
+
+                     continue;
              }
      }
 }
@@ -68,7 +70,7 @@ do_bar(void *nil)
 
      while (1) {
 
-             LOCK_BLOCK(&mutex) {
+             WITH_LOCK(&mutex) {
                      print_kernel(bar_str);
                      wait(HZ / 2);
              }

@@ -66,7 +66,17 @@ volatile struct mutex * lock_mutex(volatile struct mutex *mutex);
  */
 error_t unlock_mutex(volatile struct mutex *mutex);
 
-#define LOCK_BLOCK(MUTEX) \
-        for (volatile struct mutex *__mutex__= lock_mutex(MUTEX); __mutex__; unlock_mutex(__mutex__), __mutex__=NULL, reschedule())
+static inline void cleanup_mutex(volatile struct mutex **mutex)
+{
+        /* Cleanup is when for returning from the block.  But if we get
+         * out of the block naturally, we don't want to cleanup a NULL pointer*/
+        if (*mutex) {
+                unlock_mutex(*mutex);
+                reschedule();
+        }
+}
+
+#define WITH_LOCK(MUTEX) \
+        for (volatile struct mutex *__mutex__ __attribute__((cleanup(cleanup_mutex)))= lock_mutex(MUTEX); __mutex__; unlock_mutex(__mutex__), __mutex__=NULL, reschedule())
 
 #endif /* YAROS_MUTEX_H */
