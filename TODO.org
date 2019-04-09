@@ -1,3 +1,10 @@
+* Remove Autogen
+* Change doc texinfo to latex
+* Remove configure script
+* Create mk directories && build system with make
+* Add script helper
+* Kernel configuration
+
 * Tasks TODO [0/10]
   - [-] Stack Poison 
   - [-] Develop tests
