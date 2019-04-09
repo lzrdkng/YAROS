@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for f in $(echo *.bash | sort -d)
+do
+    echo $f
+done

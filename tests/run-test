@@ -3,7 +3,7 @@
 EXEC=./bin/test
 SIMULATOR=simulavr
 TERMINAL=guake
-MCU=atmega324a
+MCU=atmega324pa
 F_CPU=8000000
 
 
@@ -14,7 +14,7 @@ then
 
 elif [ ${SIMULATOR} == "simulavr" ]
 then
-    OPTS="--writetopipe 0xC6,dump --gdb-debug --device ${MCU} --cpufrequency ${F_CPU} -V --file ${EXEC}"
+    OPTS="--writetopipe 0xC6,dump --gdb-debug --device ${MCU} --cpufrequency ${F_CPU} -v --file ${EXEC}"
 else
     echo "Simulator ${SIMULATOR} is not supported"
     exit 1

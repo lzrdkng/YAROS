@@ -18,7 +18,7 @@
 
 
 # Microcontroller
-MCU = atmega324a
+MCU = atmega324pa
 
 
 # Project
@@ -107,13 +107,10 @@ $(CODE) \
 $(PROF)
 
 
-
-# Linker
-LIBS := -lYAROS-atmega324a-1.1
+LIBS := -lYAROS-$(MCU)-1.1
 LDFLAGS :=  -L../lib -Wl,-Map,$(TARGET).map -mmcu=$(MCU)
 
 
-# AVR
 OBJCOPY := avr-objcopy
 AVRDUDE := avrdude
 

@@ -1,5 +1,8 @@
+#if 0
 #include <string.h>
 #include <stdio.h>
+
+#include "arch/atomic.h"
 
 #include "init/init.h"
 #include "kernel/task.h"
@@ -26,54 +29,55 @@ do_bar(void *nil);
 int
 main(int argc, char *argv[])
 {
-     /* Initialize the Kernel */
-     init_kernel();
+	/* Initialize the Kernel */
+	init_kernel();
 
-     /* Foo is scheduled */
-     run_task(&foo,
-              do_foo,
-              &bar);
+	/* Foo is scheduled */
+	run_task(&foo,
+		 do_foo,
+		 &bar);
 
-     /* Bar is suspended */
-     run_task(&bar,
-               do_bar,
-               NULL);
+	/* Bar is suspended */
+	run_task(&bar,
+		 do_bar,
+		 NULL);
 
-     run_kernel();
+	run_kernel();
 }
 
 
 OS_TASK void
 do_foo(void *bar_task)
 {
-     static const char foo_str[] = "foo\n";
+	static const char foo_str[] = "foo\n";
 
-     DEBUG("do_foo");
+	DEBUG("do_foo");
 
-     while (1) {
+	while (1) {
 
-             WITH_LOCK(&mutex) {
-                     for (U8 i=0; i<10; ++i) {
-                             print_kernel(foo_str);
-                             wait(HZ / 2);
-                     }
+		WITH_LOCK(&mutex) {
+			for (U8 i=0; i<10; ++i) {
+				print_kernel(foo_str);
+				wait(HZ / 2);
+			}
 
-                     continue;
-             }
-     }
+			continue;
+		}
+	}
 }
 
 OS_TASK void
 do_bar(void *nil)
 {
-     static const char bar_str[] = "bar\n";
+	static const char bar_str[] = "bar\n";
 
-     while (1) {
+	while (1) {
 
-             WITH_LOCK(&mutex) {
-                     print_kernel(bar_str);
-                     wait(HZ / 2);
-             }
-     }
+		WITH_LOCK(&mutex) {
+			print_kernel(bar_str);
+			wait(HZ / 2);
+		}
+	}
 }
 
+#endif

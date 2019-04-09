@@ -17,14 +17,15 @@ endef
 
 SRC_DIR= \
 arch/atmega \
+init \
+ipc \
+kernel \
 devices/adc \
 devices/clk \
 devices/irq \
 devices/twi \
-devices/usart \
-init \
-ipc \
-kernel
+devices/usart
+
 #BISON=src/parser.y
 #GEN_BISON=$(BISON:%.y=%.c)
 #CLEAN_BISON=$(GEN_BISON) $(GEN_BISON:%.c=%.h)

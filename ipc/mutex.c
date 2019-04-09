@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <util/atomic.h>
+
 #include "kernel/def.h"
 #include "kernel/errno.h"
 
