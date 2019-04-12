@@ -2,5 +2,5 @@ X(volatile jiffy_t, jiffies, (jiffy_t)(-3 * HZ));
 X(volatile u8, time_slice, 0);
 X(struct list_head, running_queue, LIST_HEAD_INIT(running_queue));
 X(struct list_head, sleeping_queue, LIST_HEAD_INIT(sleeping_queue));
-X(struct list_head *, volatile current_task, (void*)0);
+X(struct list_head *volatile, current_task, (void*)0);
 X(U8 *volatile, stack_pointer, (void*)0);

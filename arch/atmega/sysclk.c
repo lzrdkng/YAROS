@@ -9,6 +9,7 @@
 #include "kernel/sched.h"
 #include "kernel/sysclk.h"
 #include "kernel/msg.h"
+#include "kernel/panic.h"
 
 #include "devices/clk.h"
 #include "devices/irq.h"
@@ -199,7 +200,8 @@ increment_jiffies()
  * However, I'll rather use the timer overflow instead, leaving the
  * two compare units free for something else.
  */
-ISR(SYS_CLK_vect, ISR_NAKED)
+//ISR(SYS_CLK_vect, ISR_NAKED)
+ISR(TIMER0_OVF_vect, ISR_NAKED)
 {
     /*
      * Minimal context is r25, r24 and SREG. Therefore, everything has
@@ -237,9 +239,6 @@ ISR(SYS_CLK_vect, ISR_NAKED)
     restore_minimal_context();
 
     reti();
-
-
-
 }
 
 /**
@@ -248,13 +247,20 @@ ISR(SYS_CLK_vect, ISR_NAKED)
  * This routine will initialize the Kernel clock to the desired
  * frequency.
  */
-void
-init_sysclk(void)
+void init_sysclk(void)
 {
-    if (init_clk(SYS_CLK,
-                 CLK_NORMAL,
-                 SYS_CLK_SRC,
-                 0) != OK) {
-        FATAL("init_sysclk");
-    }
+    /*
+     * if (init_clk(SYS_CLK,
+     *              CLK_NORMAL,
+     *              SYS_CLK_SRC,
+     *              0) != OK) {
+     * 	    panic_kernel(0);
+     * }
+     */
+
+	if (init_clk(CLK_0,
+		     CLK_NORMAL,
+		     SYS_CLK_SRC,
+		     0) != OK)
+		panic_kernel(0);
 }

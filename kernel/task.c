@@ -1,34 +1,21 @@
 /*
- * Copyright (C) Olivier Dion <olivier.dion@polymtl.ca>
+ * SPDX-License-Identifier: LGPL-2.1-or-later
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright (C) 2019 Olivier Dion <olivier.dion@polymtl.ca>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * kernel/task.c
  */
 
+
+#include <string.h>             /* For memset */
+#include <util/atomic.h>        /* For Atomic Block */
 
 #include "kernel/def.h"
 #include "kernel/global.h"
 #include "kernel/panic.h"
 #include "kernel/sched.h"
 #include "kernel/task.h"
-
-
 #include "util/list.h"
-
-
-#include <string.h>             /* For memset */
-#include <util/atomic.h>        /* For Atomic Block */
-
 
 /**
  * This need to be not optimize. I don't know why, but at other levels
@@ -86,14 +73,6 @@ prepare_stack(struct task *T,
      T->stack[T->size - 30] = (U8)(((U16)data) >> 8);
 }
 
-
-/**
- * @brief Free the resource of a task and remove it from any queue.
- *
- * This is an helper for the kill_self function.
- *
- * @param T The task to free.
- */
 __notnull static inline void __free_task(struct task *T)
 {
      T->running = TASK_SLEEP;
@@ -105,8 +84,7 @@ __notnull static inline void clear_stack(struct task *T)
 	memset(T->stack, 0x00, T->size);
 }
 
-
-__nonnull(1,2) void init_task(struct task *T,
+__nonnull(1,2) void task_init(struct task *T,
 			      taskfunc func,
 			      void *data)
 {
@@ -154,13 +132,11 @@ void kill_self(void)
       */
      RESTORE_STACK;
 
-     /*
-      * End of Atomic operation. Return to the scheduled task.
-      */
-     asm volatile("reti" ::: "memory");
+     /* Return to the scheduled task */
+     reti();
 }
 
-void kill_task(struct task *T)
+__optimize0 void kill_task(struct task *T)
 {
      ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
 

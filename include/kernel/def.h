@@ -24,7 +24,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#include "kernel/config.h"
 #include "kernel/type.h"
 #include "kernel/errno.h"
 

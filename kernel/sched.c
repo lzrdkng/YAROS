@@ -22,15 +22,15 @@
  */
 void __do_schedule(void)
 {
-    __reset_time_slice((struct task*)current_task);
+	__reset_time_slice((struct task*)current_task);
 
-    ((struct task*)current_task)->stack_pointer = stack_pointer;
+	((struct task*)current_task)->stack_pointer = stack_pointer;
 
-    list_rotate_left(&running_queue);
+	list_rotate_left(&running_queue);
 
-    current_task = running_queue.next;
+	current_task = running_queue.next;
 
-    stack_pointer = ((struct task*)current_task)->stack_pointer;
+	stack_pointer = ((struct task*)current_task)->stack_pointer;
 }
 
 /**
@@ -42,10 +42,12 @@ void __do_schedule(void)
  *
  * This should NEVER be call in non premptive context.
  */
-void __reschedule()
+void reschedule()
 {
-    if (running_queue.next != running_queue.prev)
-        do_schedule();
+	cli();
 
-    asm volatile ("reti");
+	if (running_queue.next != running_queue.prev)
+		do_schedule();
+
+	reti();
 }

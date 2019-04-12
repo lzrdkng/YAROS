@@ -27,8 +27,10 @@
 #  error "CONFIG_SYS_CLK: Kernel Clock is not defined."
 #endif
 
-#if KLCK == CLK_0
-#  define SYS_CLK_vect TIMER0_OVF_vect
+#ifdef CONFIG_SYS_CLK_vect
+#  define SYS_CLK_vect CONFIG_SYS_CLK_vect
+#else
+#  error "SYS_CLK not defined"
 #endif
 
 #define VERBOSE_LEVEL 5

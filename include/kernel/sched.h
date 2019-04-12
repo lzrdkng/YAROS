@@ -133,12 +133,7 @@ __os_main __optimize("s") void __do_schedule(void);
  * When called, the current task is put at the end of running queue
  * and the next task is scheduled.
  */
-extern void __reschedule();
-__notprempt static inline void reschedule()
-{
-	cli();
-	__reschedule();
-}
+extern void reschedule();
 
 /**
  * __reset_time_slice() - Reset time slice according to task' nice value.

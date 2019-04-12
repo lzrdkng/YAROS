@@ -302,7 +302,7 @@ These functions help you with getting the time.
 
 @subsection Task and Scheduler
 These functions give you control over the tasks and the scheduler
-@func{init_task}
+@func{task_init}
 @func{kill_self}
 @func{kill_task}
 @func{reschedule}
@@ -370,7 +370,7 @@ These functions help you synchronize task between them.
                  &bar);
 
         @com{/* Bar is suspended */}
-        init_task(&bar,
+        task_init(&bar,
                   do_bar,
                   NULL);
 

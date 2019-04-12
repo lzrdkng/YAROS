@@ -61,7 +61,7 @@
                   &bar);
 
          /* Bar is suspended */
-         init_task(&bar,
+         task_init(&bar,
                    do_bar,
                    NULL);
 

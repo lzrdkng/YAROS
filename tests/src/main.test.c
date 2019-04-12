@@ -1,4 +1,3 @@
-#if 0
 #include <string.h>
 #include <stdio.h>
 
@@ -17,8 +16,6 @@ struct task foo = TASK(TASK_P0, TASK_N15, 100);
 
 /* foo has priority level 4, nice value of 9 and a stack of 75 bytess */
 struct task bar = TASK(TASK_P4, TASK_N15, 75);
-
-volatile struct mutex mutex = INIT_MUTEX;
 
 OS_TASK void
 do_foo(void *task);
@@ -54,16 +51,10 @@ do_foo(void *bar_task)
 	DEBUG("do_foo");
 
 	while (1) {
-
-		WITH_LOCK(&mutex) {
-			for (U8 i=0; i<10; ++i) {
-				print_kernel(foo_str);
-				wait(HZ / 2);
-			}
-
-			continue;
-		}
+		print_kernel(foo_str);
+		wait(HZ);
 	}
+
 }
 
 OS_TASK void
@@ -72,12 +63,8 @@ do_bar(void *nil)
 	static const char bar_str[] = "bar\n";
 
 	while (1) {
-
-		WITH_LOCK(&mutex) {
-			print_kernel(bar_str);
-			wait(HZ / 2);
-		}
+		print_kernel(bar_str);
 	}
-}
 
-#endif
+
+}
