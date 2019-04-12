@@ -22,8 +22,6 @@
  */
 void __do_schedule(void)
 {
-	__reset_time_slice((struct task*)current_task);
-
 	((struct task*)current_task)->stack_pointer = stack_pointer;
 
 	list_rotate_left(&running_queue);
@@ -31,6 +29,8 @@ void __do_schedule(void)
 	current_task = running_queue.next;
 
 	stack_pointer = ((struct task*)current_task)->stack_pointer;
+
+	__reset_time_slice((struct task*)current_task);
 }
 
 /**

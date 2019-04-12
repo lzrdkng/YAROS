@@ -1,20 +1,88 @@
 #!/bin/bash
 
 EXEC=./bin/test
-SIMULATOR=simulavr
-TERMINAL=guake
+SIMULATOR=simavr
+TERMINAL=urxvt
 MCU=atmega324pa
 F_CPU=8000000
+
+declare -a MCU_SIMAVR=(atmega328
+                       atmega328p
+                       atmega324
+                       atmega324p
+                       atmega168
+                       atmega168p
+                       atmega168pa
+                       attiny2313a
+                       atmega88
+                       atmega88p
+                       atmega88pa
+                       atmega32
+                       attiny13
+                       attiny13a
+                       atmega8
+                       atmega8l
+                       attiny45
+                       attiny25
+                       attiny24
+                       attiny4313
+                       atmega16
+                       at90usb162
+                       attiny85
+                       atmega128rfa1
+                       atmega2560
+                       atmega32u4
+                       atmega324a
+                       atmega324pa
+                       attiny2313
+                       attiny2313v
+                       atmega644
+                       atmega644p
+                       atmega128rfr2
+                       atmega48
+                       atmega48p
+                       atmega48pa
+                       attiny44
+                       atmega128
+                       atmega128L
+                       atmega1281
+                       atmega1280
+                       attiny84
+                       atmega164
+                       atmega164p
+                       atmega164pa
+                       atmega16m1
+                       atmega1284p
+                       atmega1284)
+
+function check_simavr_mcu {
+
+    for mcu in "${MCU_SIMAVR[@]}"
+    do
+        if [ ${mcu} == ${MCU} ]
+        then
+            return 0
+        fi
+    done
+
+    return 1
+}
 
 
 if [ ${SIMULATOR} == "simavr" ]
 then
-    echo "simavr not supported"
-    exit 1
+    check_simavr_mcu
+    if [ $? -ne 0 ]
+    then
+        echo "MCU" ${MCU} "is not supported by" ${SIMULATOR}
+        exit 1
+    fi
+
+    OPTS="--gdb --mcu ${MCU} --freq ${F_CPU} -v ${EXEC}"
 
 elif [ ${SIMULATOR} == "simulavr" ]
 then
-    OPTS="--writetopipe 0xC6,dump --gdb-debug --device ${MCU} --cpufrequency ${F_CPU} -v --file ${EXEC}"
+    OPTS="--writetopipe 0xC6,dump --gdb-debug --device ${MCU} --cpufrequency ${F_CPU} -V --file ${EXEC}"
 else
     echo "Simulator ${SIMULATOR} is not supported"
     exit 1
@@ -29,15 +97,12 @@ then
     CMD="${TERMINAL} --workdir ${PWD} --seperate -e ${SIMULATOR} ${OPTS} &"
 elif [ $TERMINAL == "urxvt" ]
 then
-    CMD="${TERMINAL} -e ${SIMULATOR} ${OPTS} &"
-elif [ $TERMINAL == "guake" ]
-then
-    CMD="${SIMULATOR} ${OPTS} &"
+     CMD="${TERMINAL} -e ${SIMULATOR} ${OPTS} &"
 else
     echo "Terminal ${TERMINAL} is not supported"
     exit 1
 fi
 
-${CMD}
-#avr-gdb -x .gdbinit ${EXEC}
-#pkill ${SIMULATOR}
+eval ${CMD}
+avr-gdb -x .gdbinit ${EXEC}
+pkill ${SIMULATOR}
