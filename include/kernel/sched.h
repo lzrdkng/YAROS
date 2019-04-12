@@ -22,7 +22,7 @@
 #include "kernel/global.h"
 #include "kernel/task.h"
 
-#include "util/dlist.h"
+#include "util/list.h"
 
 /*
  * Thanks to RTOS. These macros should always be call in CLI context.

@@ -3,9 +3,9 @@
    It's my first attempt to make an OS kernel.
 
 * Licenses
-  YAROS is release on GPL 3.0 by default, see LICENSE.  However, I can
-  give you copyright for other licenses such as LGPL.  Please contact
-  me privately on this matter.
+  YAROS is release under the LGPL v2.1, see COPYING.  However, I can
+  give you copyright for other licenses.  Please contact me privately
+  on this matter.
 
 * Manuals
   YAROS as now its own manual.

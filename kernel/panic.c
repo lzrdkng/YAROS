@@ -42,11 +42,11 @@ __core_dumb(S16 infos)
      U8 n_running = 0;
      U8 n_sleeping = 0;
 
-     dlist_for_each_entry(T, &running_queue, self) {
+     list_for_each_entry(T, &running_queue, self) {
           ++n_running;
      }
 
-     dlist_for_each_entry(T, &sleeping_queue, self) {
+     list_for_each_entry(T, &sleeping_queue, self) {
           ++n_sleeping;
      }
 
@@ -64,7 +64,7 @@ __core_dumb(S16 infos)
      write_usart(0, buff, strlen(buff));
 
      /* Running Tasks */
-     dlist_for_each_entry(T, &running_queue, self) {
+     list_for_each_entry(T, &running_queue, self) {
 
           if (&(T->self) == current_task)
                sprintf(buff, "\n\tTask 0x%x (*)\n", (U16)T);
@@ -92,7 +92,7 @@ __core_dumb(S16 infos)
      write_usart(0, buff, strlen(buff));
 
      /* Sleeping Tasks */
-     dlist_for_each_entry(T, &sleeping_queue, self) {
+     list_for_each_entry(T, &sleeping_queue, self) {
 
           sprintf(buff, "\n\tTask 0x%x\n", (U16)T);
           write_usart(0, buff, strlen(buff));

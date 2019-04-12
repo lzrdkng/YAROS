@@ -1,8 +1,17 @@
+# Object files
 *.o
 *.d
 *.a
+
+# Directories
 build
 lib
+
+# GNU Global
 GPATH
 GRTAGS
 GTAGS
+
+# Locals
+local.mk
+conf.mk

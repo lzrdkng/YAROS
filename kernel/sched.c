@@ -25,7 +25,7 @@
 #include "kernel/task.h"
 #include "kernel/panic.h"
 
-#include "util/dlist.h"
+#include "util/list.h"
 
 void
 __do_schedule(void)
@@ -34,7 +34,7 @@ __do_schedule(void)
 
     ((struct task*)current_task)->stack_pointer = stack_pointer;
 
-    dlist_rotate_left(&running_queue);
+    list_rotate_left(&running_queue);
 
     current_task = running_queue.next;
 

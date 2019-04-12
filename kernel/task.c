@@ -23,7 +23,7 @@
 #include "kernel/task.h"
 
 
-#include "util/dlist.h"
+#include "util/list.h"
 
 
 #include <string.h>             /* For memset */
@@ -98,7 +98,7 @@ static inline NON_NULL()  void
      __free_task(struct task *T)
 {
      T->running = TASK_SLEEP;
-     dlist_del(&(T->self));
+     list_del(&(T->self));
 }
 
 
@@ -110,7 +110,7 @@ init_task(struct task *T,
      /*
       * Initialize the linked list.
       */
-     INIT_DLIST(&T->self);
+     INIT_LIST_HEAD(&T->self);
 
      /*
       * Clear the stack
@@ -191,7 +191,7 @@ NON_NULL() void
 {
      T->running = TASK_SLEEP;
 
-     dlist_move(&T->self, &sleeping_queue);
+     list_move(&T->self, &sleeping_queue);
 }
 
 OS_MAIN OPTIMIZE("s") void
@@ -249,14 +249,14 @@ resume_task(struct task *T)
 
           struct task *pos;
 
-          dlist_for_each_entry(pos, &running_queue, self) {
+          list_for_each_entry(pos, &running_queue, self) {
 
                if (pos->priority >= T->priority) {
-                    dlist_move_tail(&T->self, &pos->self);
+                    list_move_tail(&T->self, &pos->self);
                     return;
                }
           }
 
-          dlist_move_tail(&T->self, &running_queue);
+          list_move_tail(&T->self, &running_queue);
      }
 }

@@ -22,7 +22,7 @@
 #include "kernel/errno.h"
 #include "kernel/def.h"
 
-#include "util/dlist.h"
+#include "util/list.h"
 
 #define MIN_STACK_SIZE 40
 
@@ -135,10 +135,10 @@ enum task_nice {
  * @note It's very important that the first member of the task is
  * task::self. This is because that way we can say that the task is
  * "this". Therefore, you will often see some casting from a pointer
- * of struct dlist to a pointer of struct task. Basic inheritance.
+ * of struct list_head to a pointer of struct task. Basic inheritance.
  */
 struct task {
-  struct dlist self;
+  struct list_head self;
   U8 * volatile stack_pointer;
   U8 running:1;
   U8 priority:3;

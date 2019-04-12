@@ -15,7 +15,7 @@
 
 #include "init/init.h"
 
-#include "util/dlist.h"
+#include "util/list.h"
 
 extern void init_sysclk(void);
 
@@ -31,10 +31,10 @@ run_kernel()
 
     enable_irq(IRQ_TIMER0_OVF);
     /* If no task is scheduled for running */
-    if (dlist_is_empty(&running_queue)) {
+    if (list_empty(&running_queue)) {
 #if defined(TODO_NO_PANIC) && 0
         asm volatile("sei" ::: "memory");
-        while (dlist_is_empty(&running_queue))  /* Wait for event to wake up task */
+        while (list_empty(&running_queue))  /* Wait for event to wake up task */
             ;
         asm volatile("cli" ::: "memory");
 #endif
@@ -44,7 +44,7 @@ run_kernel()
     /*
      * Bootstrap the first task
      */
-    T = dlist_first_entry(&running_queue, struct task, self);
+    T = list_first_entry(&running_queue, struct task, self);
 
     stack_pointer = T->stack_pointer;
     current_task = &T->self;

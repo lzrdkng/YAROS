@@ -7,7 +7,7 @@
  */
 
 #include "kernel/type.h"
-#include "util/dlist.h"
+#include "util/list.h"
 
 #undef X
 #define X(T, name, value) T name = value;
