@@ -111,7 +111,7 @@
  * @note It's mandatory to save the context before calling and
  * restoring the new context after returned.
  */
-__os_main __optimize("s") void __do_schedule(void);
+extern void __do_schedule(void);
 
 /*
  * do_schedule() - Helper marcro use by the scheduler.

@@ -20,7 +20,7 @@
  * registers were save.
  *
  */
-void __do_schedule(void)
+__os_main __optimize("s") void __do_schedule(void)
 {
 	((struct task*)current_task)->stack_pointer = stack_pointer;
 
