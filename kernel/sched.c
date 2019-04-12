@@ -1,34 +1,26 @@
 /*
- * Copyright (C) Olivier Dion <olivier.dion@polymtl.ca>
+ * SPDX-License-Identifier: LGPL-2.1-or-later
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright (C) 2019 Olivier Dion <olivier.dion@polymtl.ca>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
-/**
- * @brief YAS' tasks scheduler.
+ * kernel/sched.c - Round robin scheduler.
  */
 
 #include "kernel/sched.h"
 #include "kernel/global.h"
 #include "kernel/task.h"
 #include "kernel/panic.h"
-
 #include "util/list.h"
 
-void
-__do_schedule(void)
+/**
+ * __do_schedule() - This is where the magic happen.
+ *
+ * This procedure should never be call directly.  Only through the
+ * do_schedule() macro.  This is to ensure that the stack pointer and
+ * registers were save.
+ *
+ */
+void __do_schedule(void)
 {
     __reset_time_slice((struct task*)current_task);
 
@@ -41,13 +33,19 @@ __do_schedule(void)
     stack_pointer = ((struct task*)current_task)->stack_pointer;
 }
 
-void
-reschedule()
+/**
+ * __reschedule() - Internal of reschedule()
+ *
+ * Force rescheduling of current task, if there's other task to run.
+ * If the calling task is the only task running, nothing happen and
+ * return imedialty to the caller.
+ *
+ * This should NEVER be call in non premptive context.
+ */
+void __reschedule()
 {
-    asm volatile ("cli" ::: "memory");
-
     if (running_queue.next != running_queue.prev)
         do_schedule();
 
-    asm volatile ("reti" ::: "memory");
+    asm volatile ("reti");
 }

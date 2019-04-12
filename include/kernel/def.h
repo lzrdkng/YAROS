@@ -20,12 +20,13 @@
 #include <assert.h>
 #include <stddef.h>
 
+/* AVR */
+#include <avr/io.h>
+#include <avr/interrupt.h>
 
 #include "kernel/config.h"
 #include "kernel/type.h"
 #include "kernel/errno.h"
-
-#include <avr/io.h>
 
 #define xstr(s) str(s)
 #define str(s) #s
@@ -45,14 +46,21 @@
 #define NAKED __attribute__((naked))
 #define __naked __attribute__((__naked__))
 #define NON_NULL(...) __attribute__((nonnull(__VA_ARGS__)))
+#define __notnull __attribute__((__nonnull__()))
+#define __nonnull(...) __attribute__((__nonnull__(__VA_ARGS__)))
 #define NO_INLINE __attribute__((noinline))
+#define __noinline __attribute__((__noinline__))
 #define NO_OPTIMIZE __attribute__((optimize("0")))
+#define __optimize0 __attribute__((optimize("0")))
 #define NO_RETURN __attribute__((noreturn))
 #define OS_MAIN __attribute__((OS_main))
+#define __os_main __attribute__((__OS_main__))
 #define OS_TASK __attribute__((OS_task))
 #define __os_task __attribute__((__OS_task__))
 #define UNUSED __attribute__((unused))
 #define __unused __attribute__((__unused__))
 #define OPTIMIZE(O) __attribute__((optimize( O )))
 #define __optimize(O) __attribute__((__optimize__(O)))
+
+#define __notprempt 		/* TODO: Define me */
 #endif /* YAROS_DEF_H */

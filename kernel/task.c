@@ -35,7 +35,7 @@
  * of optimization, GCC just fuck up things and corrupt the memory
  * of the task's stack when using multiple tasks somehow.
  */
-static NO_INLINE NO_OPTIMIZE void
+__noinline __optimize0 static void
 prepare_stack(struct task *T,
               taskfunc func,
               void *data)
@@ -94,34 +94,24 @@ prepare_stack(struct task *T,
  *
  * @param T The task to free.
  */
-static inline NON_NULL()  void
-     __free_task(struct task *T)
+__notnull static inline void __free_task(struct task *T)
 {
      T->running = TASK_SLEEP;
      list_del(&(T->self));
 }
 
-
-void
-init_task(struct task *T,
-          taskfunc func,
-          void *data)
+__notnull static inline void clear_stack(struct task *T)
 {
-     /*
-      * Initialize the linked list.
-      */
+	memset(T->stack, 0x00, T->size);
+}
+
+
+__nonnull(1,2) void init_task(struct task *T,
+			      taskfunc func,
+			      void *data)
+{
      INIT_LIST_HEAD(&T->self);
-
-     /*
-      * Clear the stack
-      */
-     memset(T->stack,
-            0x00,
-            T->size);
-
-     /*
-      * Push kill_self and func on the task's stack.
-      */
+     clear_stack(T);
      prepare_stack(T, func, data);
 
      /*
@@ -136,8 +126,7 @@ init_task(struct task *T,
      suspend_task(T);
 }
 
-void
-kill_self(void)
+void kill_self(void)
 {
      /*
       * Entering Atomic operation.
@@ -171,31 +160,24 @@ kill_self(void)
      asm volatile("reti" ::: "memory");
 }
 
-void
-kill_task(struct task *T)
+void kill_task(struct task *T)
 {
-     /*
-      * Entering Atomic operation.
-      */
      ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
 
-          if (&T->self == current_task || T == NULL)
+          if (T == NULL || &T->self == current_task)
                kill_self();
 
           __free_task(T);
      }
 }
 
-NON_NULL() void
-     __suspend_task(struct task *T)
+__notnull void __suspend_task(struct task *T)
 {
      T->running = TASK_SLEEP;
-
      list_move(&T->self, &sleeping_queue);
 }
 
-OS_MAIN OPTIMIZE("s") void
-     __suspend_self()
+__os_main __optimize("s") void __suspend_self()
 {
      __suspend_task((struct task*)current_task);
 
@@ -217,12 +199,11 @@ OS_MAIN OPTIMIZE("s") void
      asm volatile ("reti" ::: "memory");
 }
 
-void
-suspend_task(struct task *T)
+void suspend_task(struct task *T)
 {
      ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
 
-          if (&T->self == current_task || T == NULL)
+          if (T == NULL || &T->self == current_task)
                __suspend_self();
           else
                __suspend_task(T);
@@ -230,8 +211,7 @@ suspend_task(struct task *T)
 }
 
 
-void
-resume_task(struct task *T)
+__notnull void resume_task(struct task *T)
 {
      if (!IS_SLEEPING(T))
           return;

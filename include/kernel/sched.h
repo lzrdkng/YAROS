@@ -1,22 +1,5 @@
-/*
- * Copyright (C) Olivier Dion <olivier.dion@polymtl.ca>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-#ifndef YAROS_SCHED_H
-#define YAROS_SCHED_H
+#ifndef YR_SCHED_H
+#define YR_SCHED_H
 
 #include "kernel/def.h"
 #include "kernel/global.h"
@@ -24,9 +7,6 @@
 
 #include "util/list.h"
 
-/*
- * Thanks to RTOS. These macros should always be call in CLI context.
- */
 #define SAVE_STACK                              \
      asm volatile(                              \
           "push r0 \n\t"                        \
@@ -131,28 +111,45 @@
  * @note It's mandatory to save the context before calling and
  * restoring the new context after returned.
  */
-OS_MAIN OPTIMIZE("s") void __do_schedule(void);
+__os_main __optimize("s") void __do_schedule(void);
 
 /*
- * Helper Macro that wrap __do_schedule with saving/restoring context.
+ * do_schedule() - Helper marcro use by the scheduler.
+ *
+ * DO NOT CALL THIS.
  */
 #define do_schedule()                           \
-     do {                                       \
+	({					\
           SAVE_STACK;                           \
           SAVE_SP;                              \
           __do_schedule();                      \
           RESTORE_SP;                           \
           RESTORE_STACK;                        \
-     } while(0)
+	})
 
 /**
- * @brief Call do_schedule without waiting for for interrupt. This is
- * useful when waiting for a polling event.
+ * reschedule() - Force rescheduling.
+ *
+ * When called, the current task is put at the end of running queue
+ * and the next task is scheduled.
  */
-void reschedule();
+extern void __reschedule();
+__notprempt static inline void reschedule()
+{
+	cli();
+	__reschedule();
+}
 
-INLINE void __reset_time_slice(struct task *T)
+/**
+ * __reset_time_slice() - Reset time slice according to task' nice value.
+ * @T:  The task.
+ *
+ * This funtion is used internally by the scheduler and should NEVER
+ * be used.
+ */
+__notnull static inline void __reset_time_slice(struct task *T)
 {
      time_slice = TASK_MAX_NICE - T->nice;
 }
-#endif /* YAROS_SCHED_H */
+
+#endif
